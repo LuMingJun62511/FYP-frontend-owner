@@ -19,7 +19,6 @@
           <el-main class="main">
             <router-view/>
           </el-main>
-<!--          <el-footer class="footer">Footer</el-footer>-->
         </el-container>
       </el-container>
     </el-container>
@@ -30,7 +29,6 @@
 <script>
 import Sidebar from '@/views/layout/sidebar.vue';
 
-// let isCollapse
 export default {
   name: 'AppLayout',
   data() {
@@ -38,9 +36,7 @@ export default {
       isCollapse: false,
     }
   },
-  // computed: {
-  //   return isCollapse;
-  // },
+
   methods: {
     handleToggle() {
       this.isCollapse = !this.isCollapse
@@ -64,9 +60,4 @@ export default {
     background: #a1e9d2;
     height:15vh;
   }
-  /*.footer{*/
-  /*  background: #a1e9d2;*/
-  /*  height:10vh;*/
-  /*  display: flex;*/
-  /*}*/
 </style>
