@@ -1,34 +1,45 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/login/index.vue'
-import Home from '@/views/home/index.vue'
 import Layout from '@/views/layout/index.vue'
+import store from '@/store/index'
+// const isAuthenticated = store.state.isLogin;
 
 const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: () => import('@/views/login/myLogin.vue'),
+
   },
-  {
-    path: '/home',
-    name: 'Home',
-    component: Home
-  },
+  // {
+  //   path: '/',
+  //   name: 'layout',
+  //   component: Layout,
+  // },
   {
     path: '/',
-    name: 'layout',
-    component: Layout
+    name: 'Home',
+    component: Layout,
+    children: [{
+      path: 'allInfo',
+      name: 'allOrdersInfo',
+      component: () => import('@/views/home/index.vue'),
+      // meta: {title: '商品列表', icon: 'product-list'}
+    },
+    ]
   },
+
 
   {
     path: '/oms',
     name: 'omsRoot',
     component: Layout,
+
     redirect: '/oms/allInfo',//默认导向这里
     children: [{
         path: 'allInfo',
         name: 'allOrdersInfo',
         component: () => import('@/views/oms/orderInfo.vue'),
+
         // meta: {title: '商品列表', icon: 'product-list'}
       },
       {
@@ -43,7 +54,14 @@ const routes = [
         component: () => import('@/views/oms/order/myOrderDetail.vue'),
         // meta: {title: '商品列表', icon: 'product-list'}
       },
-    ]
+
+    ],
+    beforeEnter(to, from, next){
+      if (!store.state.isLogin && to.name !== 'Login' ) next({ name: 'Login' })
+      else next()
+    },
+
+
   },
   {
     path: '/sms',
@@ -53,7 +71,7 @@ const routes = [
     children: [{
       path: 'shelfManage',
       name: 'shelfManage',
-      component: () => import('@/views/sms/components/testBoth.vue')
+      component: () => import('@/views/sms/shelfManage.vue')
     },
 
     ]

@@ -1,28 +1,27 @@
 <template>
-  <div class="common-layout">
-    <el-container class="container">
-      <el-header class="header">
-        Header
-        <el-row>
-          <el-col :span="1">
-            <el-button type="text" @click="handleToggle">
-              三
-            </el-button>
-          </el-col>
-        </el-row>
-      </el-header>
-      <el-container>
-        <el-aside class="aside">
-          <Sidebar :isCollapse="isCollapse"/>
-        </el-aside>
-        <el-container>
-          <el-main class="main">
-            <router-view/>
-          </el-main>
-        </el-container>
-      </el-container>
+  <el-container class="container">
+    <el-header class="header">
+<!--      Header-->
+      <el-row>
+        <el-col :span="1">
+          <el-button type="text" @click="handleToggle">
+            三
+          </el-button>
+        </el-col>
+        <el-col :span="1">
+          <img src="@/assets/images/user.png" class="image">
+        </el-col>
+      </el-row>
+    </el-header>
+
+    <el-container style="display: flex">
+      <Sidebar :isCollapse="isCollapse"/>
+      <el-main class="main">
+        <router-view/>
+      </el-main>
     </el-container>
-  </div>
+  </el-container>
+
 </template>
 
 
@@ -48,16 +47,21 @@ export default {
 </script>
 
 <style scoped>
-  .container {
-    height: 100vh;
+  /*.container {*/
+  /*  height: 100vh;*/
+  /*}*/
+
+  .main{
+    border-style:solid;
+    border-width:1px;
   }
-  .aside{
-    /*background: #797979;*/
-    width:230px;
-    display: flex;
-  }
+
   .header{
     background: #a1e9d2;
-    height:15vh;
+    height:80px;
+  }
+  .image{
+    max-width: 70px;
+    max-height: 70px;
   }
 </style>

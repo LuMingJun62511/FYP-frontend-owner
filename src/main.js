@@ -4,7 +4,8 @@ import App from './App.vue'
 import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-// import store from './store'
+import store from './store/index'
+
 // import axios from 'axios'
 // import VueAxios from 'vue-cli-plugin-axios'
 // import SuiVue from 'semantic-ui-vue'
@@ -13,7 +14,7 @@ import 'element-plus/dist/index.css'
 // createApp(App).use(ElementPlus).use(router).mount('#app')
 const app = createApp(App)
 app.config.globalProperties.$log = console.log
-
+app.use(store)
 app.use(router)
 app.use(ElementPlus)
 

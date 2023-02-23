@@ -55,6 +55,6 @@ export default {
 
 <style scoped>
 .menu{
-  min-height: 85vh;
+  min-height: 90vh;
 }
 </style>

@@ -13,10 +13,12 @@
     "js-cookie": "^3.0.1",
     "sass": "^1.58.0",
     "semantic-ui-vue": "^0.11.0",
+    "vee-validate": "^4.7.4",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vue3-smooth-dnd": "^0.0.2",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "yup": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

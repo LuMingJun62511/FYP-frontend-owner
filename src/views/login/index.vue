@@ -23,7 +23,7 @@
         </el-form-item>
         <el-form-item prop="password">
           <el-input name="password"
-                    :type="pwdType"
+                    type="password"
                     @keyup.enter="handleLogin"
                     v-model="loginForm.password"
                     autoComplete="on"
@@ -55,7 +55,6 @@ import { setSupport, setCookie, getCookie } from '@/utils/support'
 import login_center_bg from '@/assets/images/login_center_bg.png'
 
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
   name: 'login',
   data () {
     const validateUsername = (rule, value, callback) => {
@@ -82,7 +81,6 @@ export default {
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
       loading: false,
-      pwdType: 'password',
       login_center_bg,
       dialogVisible: false,
       supportDialogVisible: false
@@ -99,13 +97,7 @@ export default {
     }
   },
   methods: {
-    showPwd () {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
-      } else {
-        this.pwdType = 'password'
-      }
-    },
+
     handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
