@@ -1,15 +1,56 @@
 <template>
-  <el-container class="container">
+  <el-container class="container" >
     <el-header class="header">
-<!--      Header-->
-      <el-row>
-        <el-col :span="1">
-          <el-button type="text" @click="handleToggle">
-            三
-          </el-button>
+      <el-row
+        class="header-row"
+        v-if="!checkLogin"
+        align="middle"
+        style="margin-top: 10px"
+      >
+        <el-col :span="1"  style="vertical-align: middle">
+          <img src="@/assets/icons/menu.png" style="max-height: 35px; max-width: 30px" @click="handleToggle">
         </el-col>
+        <el-col :span="4" >
+          <!--        <div >-->
+          <img src="@/assets/icons/home.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
+          <router-link to="/home" style="text-decoration: none; font-size: 24px">Home</router-link>
+          <!--        </div>-->
+        </el-col>
+        <el-col :span="4" :offset="11">
+          <div class="header-button">
+            <img src="@/assets/icons/login.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
+            <router-link to="/login" style="text-decoration: none; font-size: 24px">log in</router-link>
+          </div>
+        </el-col>
+        <el-col :span="4" >
+          <div class="header-button">
+            <img src="@/assets/icons/signup.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
+            <router-link to="/home" style="text-decoration: none; font-size: 24px">sign up</router-link>
+          </div>
+
+        </el-col>
+      </el-row>
+
+      <el-row
+        v-if="checkLogin"
+        class="header-row"
+        align="middle"
+        style="margin-top: 10px"
+      >
         <el-col :span="1">
-          <img src="@/assets/images/user.png" class="image">
+          <img src="@/assets/icons/menu.png" style="max-height: 35px; max-width: 30px" @click="handleToggle">
+        </el-col>
+        <el-col :span="4">
+          <div class="header-button">
+            <img src="@/assets/icons/home.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
+            <router-link to="/home" style="text-decoration: none; font-size: 24px">Home</router-link>
+          </div>
+        </el-col>
+        <el-col :span="4" :offset="15">
+          <div class="header-button">
+            <img src="@/assets/icons/logout.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
+            <router-link to="/home" style="text-decoration: none; font-size: 24px">log out</router-link>
+          </div>
         </el-col>
       </el-row>
     </el-header>
@@ -34,6 +75,11 @@ export default {
     return {
       isCollapse: false,
     }
+  },
+  computed:{
+    checkLogin(){
+      return this.$store.state.isLogin
+    },
   },
 
   methods: {

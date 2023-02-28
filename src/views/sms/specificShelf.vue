@@ -2,6 +2,24 @@
   <div style="align-content: center">
     <p>the shelf you are manipulating is number {{shelfID}}</p>
   </div>
+  <el-row align="middle">
+    <el-col :span="6" :offset="3">
+      <img src="@/assets/icons/new.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
+      <p>newly created</p>
+    </el-col>
+
+    <el-col :span="6">
+      <img src="@/assets/icons/hotSale.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
+      <p>hot sale</p>
+    </el-col>
+
+    <el-col :span="6">
+      <img src="@/assets/icons/urgent.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
+      <p>have batches near BBD</p>
+    </el-col>
+  </el-row>
+
+
   <div class="upper-area">
     <Container
       orientation="vertical"
@@ -20,7 +38,7 @@
             :drop-placeholder="dropPlaceholderOptions"
           >
             <Draggable v-for="card in column.children" :key="card.id">
-              <CommodityCard :imgUrl = testUrl :name = card.data ></CommodityCard>
+              <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :isLow = card.isLow :createdTime = card.createdTime ></CommodityCard>
             </Draggable>
           </Container>
         </div>
@@ -48,7 +66,7 @@
               :drop-placeholder="dropPlaceholderOptions"
             >
               <Draggable v-for="card in column.children" :key="card.id">
-                <CommodityCard :imgUrl = testUrl :name = card.data ></CommodityCard>
+                <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :isLow = card.isLow :createdTime = card.createdTime ></CommodityCard>
               </Draggable>
             </Container>
           </div>
@@ -61,22 +79,54 @@
     <p>——————————————————————————————————————————————————</p>
     <p>functional button area</p>
     <p>——————————————————————————————————————————————————</p>
-    <div class="operate-button-container">
-      <span>auto sort</span>
-      <el-button @click="fillAccordingBBD">according BBD</el-button>
-      <el-button @click="fillAccordingSale">according sale amount</el-button>
-    </div>
-    <div class="operate-button-container">
-      <span>new to be added</span>
-      <el-button @click="findAccordingBBD">according BBD</el-button>
-      <el-button @click="findAccordingSale">according sale amount</el-button>
-      <el-button @click="findAccordingTime">according create time</el-button>
-<!--      还得加个下拉，能选商品category-->
-    </div>
-    <div class="operate-button-container">
-      <span>finished? </span>
-      <el-button @click="saveShelf">save this shelf</el-button>
-    </div>
+
+    <el-row
+      class="operate-button-container"
+      align="middle"
+    >
+      <el-col :span="6">
+        <p>auto sort</p>
+      </el-col>
+      <el-col :span="6">
+        <el-button @click="autoSortByBBD">according BBD</el-button>
+      </el-col>
+      <el-col :span="6">
+        <el-button @click="autoSortBySale">according sale amount</el-button>
+      </el-col>
+      <el-col :span="6">
+        <el-button @click="autoSortByCreated">according created time</el-button>
+      </el-col>
+    </el-row>
+
+    <el-row
+      class="operate-button-container"
+      align="middle"
+    >
+      <el-col :span="6">
+        <p>new to be added</p>
+      </el-col>
+      <el-col :span="6">
+        <el-button @click="findAccordingBBD">according BBD</el-button>
+      </el-col>
+      <el-col :span="6">
+        <el-button @click="findAccordingSale">according sale amount</el-button>
+      </el-col>
+      <el-col :span="6">
+        <el-button @click="findAccordingTime">according create time</el-button>
+      </el-col>
+    </el-row>
+
+    <el-row
+      class="operate-button-container"
+      align="middle"
+    >
+      <el-col :span="6">
+        <p>finished?</p>
+      </el-col>
+      <el-col :span="18">
+        <el-button @click="saveShelf">save this shelf</el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -125,34 +175,83 @@ export default {
 
   created () {
     const _this = this
-    axios.get('http://localhost:8080/api/sms/shelfBasicInfo').then(function (res) {
+    _this.shelfID = this.$route.params.id
+    axios.get('http://localhost:8080/api/sms/shelfBasicInfo/'+_this.shelfID).then(function (res) {
       _this.shelfID = res.data.id
       _this.rowNum = res.data.rowNum
       _this.colNum = res.data.colNum
       _this.categoryID = res.data.categoryId
     })
-    axios.get('http://localhost:8080/api/sms/getItems').then(function (res) {
-      let temp = res.data
-      let newScene = {children:[]}
-      for (let i=0; i<_this.rowNum; i++ ){
-        newScene.children.push({id: `column${i}`,children:[]})
-      }
-      for (let i=0; i<temp.length; i++ ){
-        newScene.children[temp[i].positionRow-1].children.push({id: `${temp[i].positionRow-1}${temp[i].positionColumn}`,abstractProductId:temp[i].abstractProduct.id, data:temp[i].abstractProduct.name})
-      }
-      _this.fromExist = newScene
+    axios.get('http://localhost:8080/api/sms/getItems/'+_this.shelfID).then(function (res) {
+      _this.fromExist = _this.startTrimUpper(res.data,_this.rowNum)
     })
     axios.get('http://localhost:8080/api/pms/productsAccordingToCategory').then(function (res) {
-      let temp = res.data
-      let newScene = {children:[{id: 'column1',children:[]}]}
-      for (let i=0; i<temp.length; i++ ){
-        newScene.children[0].children.push({id: `${i}`,data:temp[i].name, abstractProductId:temp[i].id})
-      }
-      _this.fromDatabase = newScene
+      console.log(res.data[1].sale)
+      console.log(res.data[3].sale)
+
+      _this.fromDatabase = _this.startTrimLower(res.data)
     })
+
   },
 
   methods: {
+    trimUpper(temp,rowNum,colNum){
+      let newScene = {children:[]}
+      let actualRow = Math.ceil(temp.length/colNum)
+      for (let i=0; i<actualRow; i++ ){
+        newScene.children.push({id: `column${i}`,children:[]})
+      }
+      for (let i=0; i<actualRow-1; i++ ){//最后一行特殊对待一下子，因为可能不满编
+        for (let j=0; j<colNum; j++ ){
+          newScene.children[i].children.push({
+            id: `${i}${j}`,
+            abstractProductId: temp[i*colNum+j].abstractProduct.id,
+            name: temp[i*colNum+j].abstractProduct.name,
+            isUrgent: temp[i*colNum+j].abstractProduct.isUrgent,
+            sale: temp[i*colNum+j].abstractProduct.sale,
+            createdTime:temp[i*colNum+j].abstractProduct.createdTime
+          })
+        }
+      }
+      for (let i=(actualRow-1)*colNum; i<temp.length; i++ ){
+        newScene.children[actualRow-1].children.push({id: `${i/colNum}${i%colNum}`,abstractProductId:temp[i].abstractProduct.id, data:temp[i].abstractProduct.name})
+      }
+      return newScene
+    },
+    startTrimUpper(temp,rowNum){
+      let newScene = {children:[]}
+      for (let i=0; i<rowNum; i++ ){
+        newScene.children.push({id: `column${i}`,children:[]})
+      }
+      for (let i=0; i<temp.length; i++ ){
+        newScene.children[temp[i].positionRow-1].children.push({
+          id: `${temp[i].positionRow-1}${temp[i].positionColumn}`,
+          abstractProductId: temp[i].abstractProduct.id,
+          name: temp[i].abstractProduct.name,
+          isUrgent: temp[i].abstractProduct.isUrgent,
+          sale: temp[i].abstractProduct.sale,
+          createdTime:temp[i].abstractProduct.createdTime
+        })
+      }
+      for (let i=0; i<rowNum; i++ ){
+        newScene.children[i].children.sort((a, b) => a.id.localeCompare(b.id));
+      }
+      return newScene
+    },
+    startTrimLower(temp){
+      let newScene = {children:[{id: 'column1',children:[]}]}
+      for (let i=0; i<temp.length; i++ ){
+        newScene.children[0].children.push({
+          id: `${i}`,
+          abstractProductId:temp[i].id,
+          name: temp[i].name,
+          isUrgent: temp[i].isUrgent,
+          sale: temp[i].sale,
+          createdTime:temp[i].createdTime
+        })
+      }
+      return newScene
+    },
     onCardDropUpper (columnId, dropResult) {
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
         const fromExist = Object.assign({}, this.fromExist)
@@ -201,57 +300,57 @@ export default {
       }
     },
     saveShelf(){
-      // 先根据本表格生成一个要插入的数据
       let updatedData = []
       const fromExist = this.fromExist
-
       const shelfID = this.shelfID
       for (let i=0; i<fromExist.children.length; i++ ){
         for (let j=0; j<fromExist.children[i].children.length; j++ ){
-            updatedData.push(
-              {
-                id:
-                  {
-                    shelfId:shelfID,
-                    abstractProductId:fromExist.children[i].children[j].abstractProductId
-                  },
-                shelf:{
-                  id:shelfID
+          updatedData.push(
+            {
+              id:
+                {
+                  shelfId:shelfID,
+                  abstractProductId:fromExist.children[i].children[j].abstractProductId
                 },
-                abstractProduct:{
-                  id:fromExist.children[i].children[j].abstractProductId
-                },
-                positionRow:i+1,
-                positionColumn:j+1
-              }
-            )
-          }
+              shelf:{
+                id:shelfID
+              },
+              abstractProduct:{
+                id:fromExist.children[i].children[j].abstractProductId
+              },
+              positionRow:i+1,
+              positionColumn:j+1
+            }
+          )
+        }
       }
       axios.post('http://localhost:8080/api/sms/itemsSaving',updatedData).then(function (res) {
         console.log(res.status)
       })
     },
-    // 肯定不能完全不传参数，至少得指定一些货物种类
-    // autoFillAccordingBBD(){
-    //   axios.get('http://localhost:8080/sms/ShelfManagement').then(function (res) {
-    //     this.fromExist = res.data
-    //   })
-    // },
-    // autoFillAccordingSale(){
-    //   axios.get('http://localhost:8080/sms/ShelfManagement').then(function (res) {
-    //     this.fromExist = res.data
-    //   })
-    // },
-    // autoFindAccordingBBD(){
-    //   axios.get('http://localhost:8080/sms/ShelfManagement').then(function (res) {
-    //     this.fromDatabase = res.data
-    //   })
-    // },
-    // autoFindAccordingSale(){
-    //   axios.get('http://localhost:8080/sms/ShelfManagement').then(function (res) {
-    //     this.fromDatabase = res.data
-    //   })
-    // },
+    autoSortByCreated(){
+      let Data = []
+      let fromExist = this.fromExist
+      const shelfID = this.shelfID
+      const rowNum = this.rowNum
+      const colNum = this.colNum
+
+      for (let i=0; i<fromExist.children.length; i++ ){
+        for (let j=0; j<fromExist.children[i].children.length; j++ ){
+          Data.push({
+              id: fromExist.children[i].children[j].abstractProductId
+          })
+        }
+      }
+      // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
+      axios.post('http://localhost:8080/api/sms/sortByCreated/'+shelfID+'/'+rowNum+'/'+colNum,Data).then(response => {
+        this.fromExist = this.trimUpper(response.data,rowNum,colNum)
+
+        })
+    },
+    autoSortBySale(){
+
+    }
 
   }
 }
@@ -259,12 +358,7 @@ export default {
 
 
 <style scoped>
-/*.card{*/
-/*  height: 100px;*/
-/*  width: 150px;*/
-/*  border-style:solid;*/
-/*  border-width:1px;*/
-/*}*/
+
 .toBeAddedList{
   display: flex;
 }
@@ -275,7 +369,7 @@ export default {
 .lower-area{
   margin-top: 10px;
   margin-bottom: 10px;
-  height:150px;
+  height:170px;
 }
 .button-container{
 

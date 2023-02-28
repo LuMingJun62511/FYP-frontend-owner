@@ -7,8 +7,12 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/login/myLogin.vue'),
-
+    component: () => import('@/views/auth/login.vue'),
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: () => import('@/views/auth/signup.vue'),
   },
   // {
   //   path: '/',
@@ -17,11 +21,11 @@ const routes = [
   // },
   {
     path: '/',
-    name: 'Home',
+    name: 'HomeRoot',
     component: Layout,
     children: [{
-      path: 'allInfo',
-      name: 'allOrdersInfo',
+      path: 'home',
+      name: 'home',
       component: () => import('@/views/home/index.vue'),
       // meta: {title: '商品列表', icon: 'product-list'}
     },
@@ -67,13 +71,17 @@ const routes = [
     path: '/sms',
     name: 'smsRoot',
     component: Layout,
-    // redirect: '/sms/shelfManage',//默认导向这里
-    children: [{
-      path: 'shelfManage',
-      name: 'shelfManage',
-      component: () => import('@/views/sms/shelfManage.vue')
-    },
-
+    children: [
+      {
+        path: 'shelf/:id',
+        name: 'one shelf',
+        component: () => import('@/views/sms/specificShelf.vue')
+      },
+      {
+        path: 'shelfManage',
+        name: 'shelfManage',
+        component: () => import('@/views/sms/shelves.vue')
+      },
     ]
   }
 
