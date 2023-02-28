@@ -26,6 +26,8 @@ export default {
   props:['imgUrl','name','isUrgent','sale','createdTime'],
   methods:{
     checkNew(createdTime){
+      console.log("看来有的时间有问题")
+      console.log(createdTime)
       let isNew = this.calcuTime(createdTime)
       return isNew <= 30
     },

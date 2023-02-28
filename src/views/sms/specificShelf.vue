@@ -186,9 +186,6 @@ export default {
       _this.fromExist = _this.startTrimUpper(res.data,_this.rowNum)
     })
     axios.get('http://localhost:8080/api/pms/productsAccordingToCategory').then(function (res) {
-      console.log(res.data[1].sale)
-      console.log(res.data[3].sale)
-
       _this.fromDatabase = _this.startTrimLower(res.data)
     })
 
@@ -213,8 +210,15 @@ export default {
           })
         }
       }
-      for (let i=(actualRow-1)*colNum; i<temp.length; i++ ){
-        newScene.children[actualRow-1].children.push({id: `${i/colNum}${i%colNum}`,abstractProductId:temp[i].abstractProduct.id, data:temp[i].abstractProduct.name})
+      for (let i=(actualRow-1)*colNum; i<temp.length; i++ ) {
+        newScene.children[actualRow - 1].children.push({
+          id: `${i / colNum}${i % colNum}`,
+          abstractProductId: temp[i].abstractProduct.id,
+          name: temp[i].abstractProduct.name,
+          isUrgent: temp[i].abstractProduct.isUrgent,
+          sale: temp[i].abstractProduct.sale,
+          createdTime: temp[i].abstractProduct.createdTime
+        })
       }
       return newScene
     },
@@ -345,7 +349,8 @@ export default {
       // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
       axios.post('http://localhost:8080/api/sms/sortByCreated/'+shelfID+'/'+rowNum+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
-
+        console.log("传回来的数据出问题了")
+        console.log(this.fromExist)
         })
     },
     autoSortBySale(){
