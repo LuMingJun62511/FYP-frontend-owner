@@ -106,13 +106,13 @@
         <p>new to be added</p>
       </el-col>
       <el-col :span="6">
-        <el-button @click="findAccordingBBD">according BBD</el-button>
+        <el-button @click="autoFindByBBD">according BBD</el-button>
       </el-col>
       <el-col :span="6">
-        <el-button @click="findAccordingSale">according sale amount</el-button>
+        <el-button @click="autoFindBySale">according sale amount</el-button>
       </el-col>
       <el-col :span="6">
-        <el-button @click="findAccordingTime">according create time</el-button>
+        <el-button @click="autoFindByCreated">according create time</el-button>
       </el-col>
     </el-row>
 
@@ -367,7 +367,6 @@ export default {
           })
         }
       }
-      // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
       axios.post('http://localhost:8080/api/sms/sortBySales/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
         console.log(this.fromExist)
@@ -392,7 +391,27 @@ export default {
         console.log(this.fromExist)
       })
     },
-
+    autoFindByCreated(){
+      const categoryID = this.categoryID
+      axios.get('http://localhost:8080/api/pms/findProductsByCreated/'+categoryID).then(response => {
+        this.fromDatabase = this.startTrimLower(response.data)
+        console.log(this.fromDatabase)
+      })
+    },
+    autoFindBySale(){
+      const categoryID = this.categoryID
+      axios.get('http://localhost:8080/api/pms/findProductsBySale/'+categoryID).then(response => {
+        this.fromDatabase = this.startTrimLower(response.data)
+        console.log(this.fromDatabase)
+      })
+    },
+    autoFindByBBD(){
+      const categoryID = this.categoryID
+      axios.get('http://localhost:8080/api/pms/findProductsByBBD/'+categoryID).then(response => {
+        this.fromDatabase = this.startTrimLower(response.data)
+        console.log(this.fromDatabase)
+      })
+    },
   }
 }
 </script>
