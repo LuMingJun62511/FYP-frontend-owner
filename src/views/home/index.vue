@@ -31,8 +31,29 @@ export default {
             data: [40, 20, 12]
           } ]
         },
-        chartData2: {//可以这样，我放很多个chartData，然后handle选中换数据组即可
+        orderData: {//看看上月卖了多少单
+          labels: [ 'January', 'February', 'March' ],
+          datasets: [ {
+            label: 'My First Dataset',
+            data: [10, 20, 32]
+          } ]
+        },
+        saleData: {//看看上月卖了多少钱
           labels: [ '下', '先', '想' ],
+          datasets: [ {
+            label: 'My First Dataset',
+            data: [10, 20, 32]
+          } ]
+        },
+        starCommodityByAmount:{//看看上月热销产品
+          labels: [ 'January', 'February', 'March' ],
+          datasets: [ {
+            label: 'My First Dataset',
+            data: [10, 20, 32]
+          } ]
+        },
+        starCommodityBySale:{//看看上月最挣钱的
+          labels: [ 'January', 'February', 'March' ],
           datasets: [ {
             label: 'My First Dataset',
             data: [10, 20, 32]
@@ -42,8 +63,11 @@ export default {
           responsive: true
         }
       }
-    }
+    },
+  created () {
+      console.log("做一次触发，查询一下有没有临期商品这样的东西")
   }
+}
 </script>
 
 <style scoped>

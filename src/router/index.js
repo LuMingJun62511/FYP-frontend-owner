@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '@/views/layout/index.vue'
 import store from '@/store/index'
-// const isAuthenticated = store.state.isLogin;
 
 const routes = [
   {
@@ -14,24 +13,43 @@ const routes = [
     name: 'Signup',
     component: () => import('@/views/auth/signup.vue'),
   },
-  // {
-  //   path: '/',
-  //   name: 'layout',
-  //   component: Layout,
-  // },
   {
     path: '/',
     name: 'HomeRoot',
     component: Layout,
+    redirect: '/home',
     children: [{
       path: 'home',
       name: 'home',
       component: () => import('@/views/home/index.vue'),
-      // meta: {title: '商品列表', icon: 'product-list'}
     },
-    ]
+    ],
+    beforeEnter(to, from, next){
+      if (!store.state.isLogin && to.name !== 'Login' ) next({ name: 'Login' })
+      else next()
+    },
   },
-
+  {
+    path: '/sms',
+    name: 'smsRoot',
+    component: Layout,
+    children: [
+      {
+        path: 'shelf/:id',
+        name: 'one shelf',
+        component: () => import('@/views/sms/specificShelf.vue')
+      },
+      {
+        path: 'shelfManage',
+        name: 'shelfManage',
+        component: () => import('@/views/sms/shelves.vue')
+      },
+    ],
+    beforeEnter(to, from, next){
+      if (!store.state.isLogin && to.name !== 'Login' ) next({ name: 'Login' })
+      else next()
+    },
+  },
 
   {
     path: '/oms',
@@ -67,23 +85,7 @@ const routes = [
 
 
   },
-  {
-    path: '/sms',
-    name: 'smsRoot',
-    component: Layout,
-    children: [
-      {
-        path: 'shelf/:id',
-        name: 'one shelf',
-        component: () => import('@/views/sms/specificShelf.vue')
-      },
-      {
-        path: 'shelfManage',
-        name: 'shelfManage',
-        component: () => import('@/views/sms/shelves.vue')
-      },
-    ]
-  }
+
 
 
   //先在这里面配置好，然后在其他地方放link

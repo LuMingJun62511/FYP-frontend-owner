@@ -38,7 +38,7 @@
             :drop-placeholder="dropPlaceholderOptions"
           >
             <Draggable v-for="card in column.children" :key="card.id">
-              <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :isLow = card.isLow :createdTime = card.createdTime ></CommodityCard>
+              <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :sale = card.sale :createdTime = card.createdTime ></CommodityCard>
             </Draggable>
           </Container>
         </div>
@@ -66,7 +66,7 @@
               :drop-placeholder="dropPlaceholderOptions"
             >
               <Draggable v-for="card in column.children" :key="card.id">
-                <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :isLow = card.isLow :createdTime = card.createdTime ></CommodityCard>
+                <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :sale = card.sale :createdTime = card.createdTime ></CommodityCard>
               </Draggable>
             </Container>
           </div>
@@ -123,8 +123,11 @@
       <el-col :span="6">
         <p>finished?</p>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="9">
         <el-button @click="saveShelf">save this shelf</el-button>
+      </el-col>
+      <el-col :span="9">
+        <el-button @click="deleteShelf">delete this shelf</el-button>
       </el-col>
     </el-row>
   </div>
@@ -336,7 +339,6 @@ export default {
       let Data = []
       let fromExist = this.fromExist
       const shelfID = this.shelfID
-      const rowNum = this.rowNum
       const colNum = this.colNum
 
       for (let i=0; i<fromExist.children.length; i++ ){
@@ -347,15 +349,49 @@ export default {
         }
       }
       // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
-      axios.post('http://localhost:8080/api/sms/sortByCreated/'+shelfID+'/'+rowNum+'/'+colNum,Data).then(response => {
+      axios.post('http://localhost:8080/api/sms/sortByCreated/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
-        console.log("传回来的数据出问题了")
         console.log(this.fromExist)
         })
     },
     autoSortBySale(){
+      let Data = []
+      let fromExist = this.fromExist
+      const shelfID = this.shelfID
+      const colNum = this.colNum
 
-    }
+      for (let i=0; i<fromExist.children.length; i++ ){
+        for (let j=0; j<fromExist.children[i].children.length; j++ ){
+          Data.push({
+            id: fromExist.children[i].children[j].abstractProductId
+          })
+        }
+      }
+      // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
+      axios.post('http://localhost:8080/api/sms/sortBySales/'+shelfID+'/'+colNum,Data).then(response => {
+        this.fromExist = this.trimUpper(response.data,rowNum,colNum)
+        console.log(this.fromExist)
+      })
+    },
+    autoSortByBBD(){
+      let Data = []
+      let fromExist = this.fromExist
+      const shelfID = this.shelfID
+      const colNum = this.colNum
+
+      for (let i=0; i<fromExist.children.length; i++ ){
+        for (let j=0; j<fromExist.children[i].children.length; j++ ){
+          Data.push({
+            id: fromExist.children[i].children[j].abstractProductId
+          })
+        }
+      }
+      // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
+      axios.post('http://localhost:8080/api/sms/sortByBBD/'+shelfID+'/'+colNum,Data).then(response => {
+        this.fromExist = this.trimUpper(response.data,rowNum,colNum)
+        console.log(this.fromExist)
+      })
+    },
 
   }
 }

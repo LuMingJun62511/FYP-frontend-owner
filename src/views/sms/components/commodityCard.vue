@@ -4,14 +4,14 @@
       <img :src="require('@/assets/images/' + imgUrl + '')" class="image" alt="@/assets/images/image-not-found-icon.png" >
     </div>
     <el-row align="middle">
-      <el-col v-if="checkNew(createdTime)">
+      <el-col v-if="checkNew(createdTime)" :span = "6">
         <img src="@/assets/icons/new.png" style="vertical-align: middle;max-width: 20px;max-height:20px "/>
       </el-col>
-      <el-col v-if="checkUrgent(isUrgent)">
-        <img src="@/assets/icons/hotSale.png" style="vertical-align: middle;max-width: 20px;max-height:20px "/>
-      </el-col>
-      <el-col v-if="checkSale(sale)">
+      <el-col v-if="checkUrgent(isUrgent)" :span = "6">
         <img src="@/assets/icons/urgent.png" style="vertical-align: middle;max-width: 20px;max-height:20px "/>
+      </el-col>
+      <el-col v-if="checkSale(sale)" :span = "6">
+        <img src="@/assets/icons/hotSale.png" style="vertical-align: middle;max-width: 20px;max-height:20px "/>
       </el-col>
     </el-row>
     <div>
@@ -26,8 +26,6 @@ export default {
   props:['imgUrl','name','isUrgent','sale','createdTime'],
   methods:{
     checkNew(createdTime){
-      console.log("看来有的时间有问题")
-      console.log(createdTime)
       let isNew = this.calcuTime(createdTime)
       return isNew <= 30
     },
