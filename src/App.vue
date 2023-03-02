@@ -1,6 +1,16 @@
 <template>
   <router-view/>
 </template>
+<script>
+  // import {provide} from 'vue'
+  // import * as echarts from 'echarts'
+  // export default {
+  //   setup(){
+  //     provide("echarts",echarts)
+  //   }
+  // }
+
+</script>
 
 <style>
 @import "@/style/common.scss";

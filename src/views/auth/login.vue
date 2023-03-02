@@ -43,7 +43,7 @@
                    :model="loginForm"
                    label-position="left">
             <h2 class="login-title color-main" v-if="userType">Welcome, store owner </h2>
-            <h2 class="login-title color-main" v-if="!userType">developer mod </h2>
+            <h2 class="login-title color-main" v-if="!userType"> Developer mod </h2>
             <el-form-item prop="username">
               <el-input name="username"
                         type="text"
