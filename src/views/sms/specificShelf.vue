@@ -141,7 +141,7 @@ import axios from 'axios'
 import CommodityCard from '@/views/sms/components/commodityCard.vue'
 
 const shelfID = 0
-const categoryID = 0
+const categoryId = 0
 const rowNum = 10
 const colNum = 10
 const fromExist = {}
@@ -160,7 +160,7 @@ export default {
       fromExist,
       fromDatabase,
       shelfID,
-      categoryID,
+      categoryId,
       rowNum,
       colNum,
       upperDropPlaceholderOptions: {
@@ -176,19 +176,25 @@ export default {
     }
   },
 
-  created () {
+  async created () {
     const _this = this
     _this.shelfID = this.$route.params.id
-    axios.get('http://localhost:8080/api/sms/shelfBasicInfo/'+_this.shelfID).then(function (res) {
-      _this.shelfID = res.data.id
+    await axios.get('http://localhost:8080/api/sms/shelfBasicInfo/'+_this.shelfID).then(function (res) {
       _this.rowNum = res.data.rowNum
       _this.colNum = res.data.colNum
-      _this.categoryID = res.data.categoryId
+      _this.categoryId = res.data.categoryId
+      console.log("第一个执行")
+      console.log(res.data)
     })
-    axios.get('http://localhost:8080/api/sms/getItems/'+_this.shelfID).then(function (res) {
+    await axios.get('http://localhost:8080/api/sms/getItems/'+_this.shelfID).then(function (res) {
+      console.log("第二个执行")
       _this.fromExist = _this.startTrimUpper(res.data,_this.rowNum)
     })
-    axios.get('http://localhost:8080/api/pms/productsAccordingToCategory').then(function (res) {
+
+    await axios.get('http://localhost:8080/api/pms/productsByCategory/'+_this.categoryId).then(function (res) {
+      console.log("第三个执行")
+      console.log(_this.categoryId)
+      console.log(res.data)
       _this.fromDatabase = _this.startTrimLower(res.data)
     })
 
@@ -352,7 +358,7 @@ export default {
       axios.post('http://localhost:8080/api/sms/sortByCreated/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
         console.log(this.fromExist)
-        })
+      })
     },
     autoSortBySale(){
       let Data = []

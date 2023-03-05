@@ -55,26 +55,16 @@ const routes = [
     path: '/oms',
     name: 'omsRoot',
     component: Layout,
-
-    redirect: '/oms/allInfo',//默认导向这里
+    redirect: '/oms/orderDealing',//默认导向这里
     children: [{
-        path: 'allInfo',
-        name: 'allOrdersInfo',
-        component: () => import('@/views/oms/orderInfo.vue'),
-
-        // meta: {title: '商品列表', icon: 'product-list'}
+        path: 'orderDealing',
+        name: 'orderDealing',
+        component: () => import('@/views/oms/orderDealing.vue'),
       },
       {
-        path: 'changeOne',
-        name: 'oneOrder',
-        component: () => import('@/views/oms/orderChange.vue'),
-        // meta: {title: '商品列表', icon: 'product-list'}
-      },
-      {
-        path: 'detail',
+        path: 'detail/:id',
         name: 'detail',
-        component: () => import('@/views/oms/order/myOrderDetail.vue'),
-        // meta: {title: '商品列表', icon: 'product-list'}
+        component: () => import('@/views/oms/orderDetail.vue'),
       },
 
     ],
@@ -82,41 +72,31 @@ const routes = [
       if (!store.state.isLogin && to.name !== 'Login' ) next({ name: 'Login' })
       else next()
     },
-
-
   },
 
 
 
-  //先在这里面配置好，然后在其他地方放link
-  // {
-  //   path: '/oms',
-  //   component: Layout,
-  //   redirect: '/pms/product',
-  //   name: 'oms',
-  //   meta: {title: '商品', icon: 'product'},
-  //   children: [{
-  //     path: 'product',
-  //     name: 'product',
-  //     component: () => import('@/views/pms/product/index'),
-  //     meta: {title: '商品列表', icon: 'product-list'},
-  //   },
-  //     {
-  //       path: 'addProduct',
-  //       name: 'addProduct',
-  //       component: () => import('@/views/pms/product/add'),
-  //       meta: {title: '添加商品', icon: 'product-add'}
-  //     },
-  //     {
-  //       path: 'updateProduct',
-  //       name: 'updateProduct',
-  //       component: () => import('@/views/pms/product/update'),
-  //       meta: {title: '修改商品', icon: 'product-add'},
-  //       hidden: true
-  //     },
-  //   ]
-  // }
+  {
+    path: '/ims',
+    name: 'imsRoot',
+    component: Layout,
+    children: [{
+      path: 'inbound',
+      name: 'inbound',
+      component: () => import('@/views/ims/inbound/index.vue'),
+    },
+      {
+        path: 'outbound',
+        name: 'outbound',
+        component: () => import('@/views/ims/outbound/index.vue'),
+      },
 
+    ],
+    beforeEnter(to, from, next){
+      if (!store.state.isLogin && to.name !== 'Login' ) next({ name: 'Login' })
+      else next()
+    },
+  },
 ]
 
 const router = createRouter({

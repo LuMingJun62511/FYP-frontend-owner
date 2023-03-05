@@ -62,7 +62,7 @@
             </el-form-item>
             <el-form-item style="margin-bottom: 60px;">
               <div style="width: 15%"></div>
-              <el-button style="width: 70%;" type="primary" @click="handleLogin(loginForm)" >
+              <el-button style="width: 70%;" type="primary" @click="handleSignup(signUpForm)" >
                 sign up
               </el-button>
               <div style="width: 15%"></div>
@@ -84,7 +84,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'myLogin',
+  name: 'mySignup',
   data () {
     return {
       signUpForm: {
@@ -99,10 +99,9 @@ export default {
     },
   },
   methods:{
-    handleLogin (signUpForm) {
-      const store = this.$store
-      axios.post('http://localhost:8080/login',signUpForm).then(function (res) {
-        // store.commit('SET_LOGIN',res.data)
+    handleSignup (signUpForm) {
+      axios.post('http://localhost:8080/signup',signUpForm).then(function (res) {
+
       })
     },
 

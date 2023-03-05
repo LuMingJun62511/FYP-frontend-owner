@@ -1,10 +1,10 @@
 <template>
-<p>change a order</p>
+
 </template>
 
 <script>
 export default {
-  name: 'orderChange'
+  name: 'index'
 }
 </script>
 

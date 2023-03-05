@@ -26,17 +26,17 @@
         <span>Online store Management</span>
       </template>
       <el-menu-item-group title="Order Management">
-        <router-link to="/oms/allInfo" style="text-decoration: none">
-          <el-menu-item index="allInfo">orders (empty now)</el-menu-item>
+        <router-link to="/oms/orderDealing" style="text-decoration: none">
+          <el-menu-item index="orderDealing">dealing orders</el-menu-item>
         </router-link>
       </el-menu-item-group>
 
       <el-menu-item-group title="Inbound/Outbound Management">
-        <router-link to="/ims/allInfo" style="text-decoration: none">
-          <el-menu-item index="allInfo">outbound (empty now)</el-menu-item>
+        <router-link to="/ims/outbound" style="text-decoration: none">
+          <el-menu-item index="outbound">outbound</el-menu-item>
         </router-link>
-        <router-link to="/ims/changeOne" style="text-decoration: none">
-          <el-menu-item index="oneOrder">inbound (empty now)</el-menu-item>
+        <router-link to="/ims/inbound" style="text-decoration: none">
+          <el-menu-item index="inbound">inbound (empty now)</el-menu-item>
         </router-link>
       </el-menu-item-group>
 

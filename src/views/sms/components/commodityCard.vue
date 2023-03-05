@@ -35,7 +35,7 @@ export default {
     checkSale(sale){
       return sale >= 25
     },
-    calcuTime(d1) {//di作为一个变量传进来
+    calcuTime(d1) {//d1作为一个变量传进来
       //如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
       d1 = d1.replace('T', " ")
       d1 = d1.replace('Z', "")

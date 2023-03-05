@@ -112,8 +112,11 @@ export default {
   methods:{
     handleLogin (loginForm) {
       const store = this.$store
-      axios.post('http://localhost:8080/login',loginForm).then(function (res) {
-        store.commit('SET_LOGIN',res.data)
+      axios.post('http://localhost:8080/login',loginForm).then(response => {
+        if(response.data){
+          store.commit('SET_LOGIN',response.data)
+          this.$router.push('/')
+        }
       })
     },
     handleChangeMod(){
@@ -128,18 +131,9 @@ export default {
   background-color:#a1e9d2;
   height:80px;
 }
-/*body {*/
-/*  background: url("@/assets/images/login_center_bg.png") no-repeat center center*/
-/*  fixed;*/
-/*  -webkit-background-size: cover;*/
-/*  -moz-background-size: cover;*/
-/*  -o-background-size: cover;*/
-/*  background-size: cover;*/
-/*}*/
+
 .login-center-layout {
   background: #a1e9d2;
-  /*width: auto;*/
-  /*height: auto;*/
   max-width: 100%;
   max-height: 100%;
   margin-top: 100px;
