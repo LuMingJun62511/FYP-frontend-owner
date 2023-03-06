@@ -92,8 +92,8 @@
       <el-button style="margin-top: 12px;" @click="finishAutoHandling">finish auto handling</el-button>
     </div>
 
-    <div v-if="steps === 1" style="align-content: center">
-      <div style="width: 800px;align-content: center ">
+    <div v-if="steps === 1">
+      <div style="width: 800px">
         <el-table
           :data="unhandledOrders"
           style="width: 100%">
@@ -148,7 +148,6 @@
             prop="note"
             width="200">
           </el-table-column>
-
         </el-table>
       </div>
       <div v-if="tempOrderItem.product_id">
@@ -192,11 +191,72 @@
     </div>
 
     <div v-if="steps === 2">
-      <p>您已经处理完所有订单，现在是否要开始出货呢，如果要开始出货，请点击以跳转到出货界面</p>
+      <div style="width: 800px">
+        <el-table
+          :data="receipts"
+          style="width: 100%">
+          <el-table-column type="expand">
+            <template v-slot="props">
+              <el-row>
+                <el-col :span="6">名称</el-col>
+                <el-col :span="6">数量</el-col>
+                <el-col :span="6">总价</el-col>
+                <el-col :span="6">操作</el-col>
+              </el-row>
+              <div v-for="item in props.row.items">
+                <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,201,210)">
+                  <el-row>
+                    <el-col :span="6">{{item.product_name}}</el-col>
+                    <el-col :span="6">{{item.amount}}</el-col>
+                    <el-col :span="6">{{item.total_price}}</el-col>
+                    <el-col :span="6">
+                      <el-button @click="abolishReceipt(item.receipt_id)">
+                        废弃此订单
+                      </el-button>
+                    </el-col>
+                  </el-row>
+                </div>
+                <div v-if="item.lack === 0" class="not-lack-one">
+                  <el-row>
+                    <el-col :span="6">{{item.product_name}}</el-col>
+                    <el-col :span="6">{{item.amount}}</el-col>
+                    <el-col :span="6">{{item.total_price}}</el-col>
+                    <el-col :span="6">
+                      <el-button @click="abolishReceipt(item.receipt_id)">
+                        废弃此订单
+                      </el-button>
+                    </el-col>
+                  </el-row>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="receipt id"
+            prop="id"
+            width="200">
+          </el-table-column>
+          <el-table-column
+            label="receiver_id"
+            prop="receiver_id"
+            width="200">
+          </el-table-column>
+          <el-table-column
+            label="member_id"
+            prop="member_id"
+            width="200">
+          </el-table-column>
+          <el-table-column
+            label="total_amount"
+            prop="total_amount"
+            width="200">
+          </el-table-column>
+        </el-table>
+      <p>您已经处理完所有订单，以下是生成的现在是否要开始出货呢，如果要开始出货，请点击以跳转到出货界面</p>
     </div>
 
   </div>
-
+  </div>
 </template>
 
 <script>
@@ -228,10 +288,11 @@ export default {
         }
       }
     },
+
     finishManualHandling(){
       if(this.unhandledOrders.length === 0){
         this.steps = 2;
-        this.updateReceipt()
+        this.addItemsToReceipt()
       }
     },
     //可能改变数组长度的方法要从后向前遍历
@@ -261,6 +322,7 @@ export default {
         this.dealUnhandledOrdersWithoutProblem(order)
       }
     },
+
     dealUnhandledOrdersWithoutProblem(order){
       const index = this.unhandledOrders.indexOf(order);
       order.status = 1
@@ -290,9 +352,10 @@ export default {
       order.items.forEach(item =>{
         this.receiptItems.push({
           receipt_id:order.id,
+          product_name:item.product_name,
           total_price:item.amount*item.price,//只记一总价，而且这个时候，对应的单价也已经被改了，所以不用担心
           amount:item.amount,
-          status:0
+          status:item.status
         })
       })
     },
@@ -401,7 +464,8 @@ export default {
               amount:tp.product_chosen,
               price:this.tempOrderItem.price,//这个是单价，和后面的总价应该区分开
               total_price:this.tempOrderItem.price*tp.product_chosen,
-              lack:0
+              lack:0,
+              status:1//这个是表示你这个货物是不是原生的
             })
           }
         }
@@ -430,6 +494,31 @@ export default {
 
     },
 
+    addItemsToReceipt(){
+      this.receipts.forEach(receipt =>{
+        receipt.items = []
+      })
+      this.receiptItems.forEach(receiptItem =>{
+        this.receipts.forEach(receipt =>{
+          if (receiptItem.receipt_id === receipt.id){
+            receipt.items.push(receiptItem)
+          }
+        })
+      })
+      let tempOrderItems = []
+      response.data.forEach(item=>{
+          tempOrderItems.push({
+            product_id:item.abstractProduct.id,
+            product_name:item.abstractProduct.name,
+            amount:item.amount,
+            price:item.abstractProduct.price,//这个是单价，和后面的总价应该区分开
+            total_price:item.totalPrice,
+            lack:0,
+            status:0//这个是标识你这个货物是不是原生的
+          })
+      })
+    },
+
     handleChosen(index, chosen, max) {
       if (chosen > max) {
         this.tempProducts[index].product_chosen = max;
@@ -454,6 +543,7 @@ export default {
   async created () {
     //   第一步，查订单
     await axios.get('http://localhost:8080/api/order/ordersThisWeek').then(response => {
+
       response.data.forEach(element =>{
         if(element.status === 1){
           this.handledOrders.push(element)
@@ -466,6 +556,7 @@ export default {
     //   第二,三步，查物品及库存
     await this.unhandledOrders.forEach(order =>{
       axios.get('http://localhost:8080/api/order/orderItems/'+order.id).then(response => {
+
         let tempOrderItems = []
         response.data.forEach(item=>{
           tempOrderItems.push({
@@ -474,7 +565,8 @@ export default {
             amount:item.amount,
             price:item.abstractProduct.price,//这个是单价，和后面的总价应该区分开
             total_price:item.totalPrice,
-            lack:0
+            lack:0,
+            status:0//这个是标识你这个货物是不是原生的
           })
           if(this.tempStock.findIndex(temp => temp.product_id === item.abstractProduct.id) === -1){//库存去重,库存中没有这个才能加
             this.tempStock.push({
