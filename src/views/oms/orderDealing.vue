@@ -185,47 +185,35 @@
             </el-row>
         </div>
         <el-button style="margin-top: 12px;" @click="manualHandlingThisOrder">finish fixing this order</el-button>
-
       </div>
       <el-button style="margin-top: 12px;" @click="finishManualHandling">finish manual handling</el-button>
     </div>
 
     <div v-if="steps === 2">
-      <div style="width: 800px">
+      <div style="width: 1000px">
         <el-table
           :data="receipts"
           style="width: 100%">
           <el-table-column type="expand">
             <template v-slot="props">
               <el-row>
-                <el-col :span="6">名称</el-col>
-                <el-col :span="6">数量</el-col>
-                <el-col :span="6">总价</el-col>
-                <el-col :span="6">操作</el-col>
+                <el-col :span="8">名称</el-col>
+                <el-col :span="8">数量</el-col>
+                <el-col :span="8">总价</el-col>
               </el-row>
               <div v-for="item in props.row.items">
-                <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,201,210)">
+                <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,242,201)">
                   <el-row>
-                    <el-col :span="6">{{item.product_name}}</el-col>
-                    <el-col :span="6">{{item.amount}}</el-col>
-                    <el-col :span="6">{{item.total_price}}</el-col>
-                    <el-col :span="6">
-                      <el-button @click="abolishReceipt(item.receipt_id)">
-                        废弃此订单
-                      </el-button>
-                    </el-col>
+                    <el-col :span="8">{{item.product_name}}</el-col>
+                    <el-col :span="8">{{item.amount}}</el-col>
+                    <el-col :span="8">{{item.total_price}}</el-col>
                   </el-row>
                 </div>
-                <div v-if="item.lack === 0" class="not-lack-one">
+                <div v-if="item.status === 0" class="not-lack-one">
                   <el-row>
-                    <el-col :span="6">{{item.product_name}}</el-col>
-                    <el-col :span="6">{{item.amount}}</el-col>
-                    <el-col :span="6">{{item.total_price}}</el-col>
-                    <el-col :span="6">
-                      <el-button @click="abolishReceipt(item.receipt_id)">
-                        废弃此订单
-                      </el-button>
-                    </el-col>
+                    <el-col :span="8">{{item.product_name}}</el-col>
+                    <el-col :span="8">{{item.amount}}</el-col>
+                    <el-col :span="8">{{item.total_price}}</el-col>
                   </el-row>
                 </div>
               </div>
@@ -251,11 +239,22 @@
             prop="total_amount"
             width="200">
           </el-table-column>
+          <el-table-column
+            label="operations"
+            prop="id">
+            <template v-slot="scope">
+              <el-button @click="abolishReceipt(scope.row.id)">
+                abolish this order and re-deal
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
-      <p>您已经处理完所有订单，以下是生成的现在是否要开始出货呢，如果要开始出货，请点击以跳转到出货界面</p>
+        <p>您已经处理完所有订单，以下是生成的现在是否要开始出货呢，如果要开始出货，请点击以跳转到出货界面</p>
+        <el-button @click="jumpToOutbound">
+          跳到处理
+        </el-button>
+      </div>
     </div>
-
-  </div>
   </div>
 </template>
 
@@ -278,6 +277,7 @@ export default {
       tempProducts:[],//这是后面解决冲突用的，是找到的同类商品
     }
   },
+
   methods:{
     finishAutoHandling(){
       if(this.unhandledOrders.every(order => order.hasProblem === 1)){//加一层判断，unhandledOrders里不能剩下没问题的订单
@@ -293,6 +293,8 @@ export default {
       if(this.unhandledOrders.length === 0){
         this.steps = 2;
         this.addItemsToReceipt()
+        // console.log(this.receipts)
+        // console.log(this.receiptItems)
       }
     },
     //可能改变数组长度的方法要从后向前遍历
@@ -414,7 +416,12 @@ export default {
           this.manualUpdateStock() //5，要虚拟出库了，这时才更新库存tempStock，
           this.dealUnhandledOrdersWithoutProblem(this.tempOrder)//6更新unhandled,生成receipt相关,
           this.checkAllUnhandledOrders()//7虚拟出库了，所以其他订单可能变坏，这就需要再全检查一遍
+
         }
+        this.tempProducts = []
+        this.tempOrder = []
+        this.tempLackedItemInStock = []
+        //这个算处理bug,因为我在最外围
       }
     },
 
@@ -490,10 +497,6 @@ export default {
       })
     },
 
-    updateReceipt(){
-
-    },
-
     addItemsToReceipt(){
       this.receipts.forEach(receipt =>{
         receipt.items = []
@@ -505,18 +508,29 @@ export default {
           }
         })
       })
-      let tempOrderItems = []
-      response.data.forEach(item=>{
-          tempOrderItems.push({
-            product_id:item.abstractProduct.id,
-            product_name:item.abstractProduct.name,
-            amount:item.amount,
-            price:item.abstractProduct.price,//这个是单价，和后面的总价应该区分开
-            total_price:item.totalPrice,
-            lack:0,
-            status:0//这个是标识你这个货物是不是原生的
-          })
-      })
+    },
+
+    updateReceipt(){
+
+    },
+
+    updateReceiptItems(){
+
+    },
+
+    updateOrders(){
+
+    },
+
+    abolishReceipt(receiptID){
+
+    },
+
+    async jumpToOutbound () {
+      await this.updateReceipt()//收据得推上去
+      await this.updateReceiptItems()//收据里的东西得推上去
+      await this.updateOrders()//然后把handledOrders里的order更新上去，主要是update为已处理
+      await this.$router.push('/ims/outbound')
     },
 
     handleChosen(index, chosen, max) {
@@ -532,6 +546,7 @@ export default {
       return JSON.parse(JSON.stringify(obj));
     }
   },
+
   computed:{
     sumChosen(){
       return this.tempProducts.reduce((acc, cur) => {
@@ -540,10 +555,10 @@ export default {
     }
 
   },
+
   async created () {
     //   第一步，查订单
     await axios.get('http://localhost:8080/api/order/ordersThisWeek').then(response => {
-
       response.data.forEach(element =>{
         if(element.status === 1){
           this.handledOrders.push(element)
@@ -556,7 +571,6 @@ export default {
     //   第二,三步，查物品及库存
     await this.unhandledOrders.forEach(order =>{
       axios.get('http://localhost:8080/api/order/orderItems/'+order.id).then(response => {
-
         let tempOrderItems = []
         response.data.forEach(item=>{
           tempOrderItems.push({

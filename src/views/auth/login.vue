@@ -93,7 +93,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'myLogin',
+  name: 'login',
   data () {
     return {
       loginForm: {
@@ -112,12 +112,22 @@ export default {
   methods:{
     handleLogin (loginForm) {
       const store = this.$store
-      axios.post('http://localhost:8080/login',loginForm).then(response => {
-        if(response.data){
-          store.commit('SET_LOGIN',response.data)
-          this.$router.push('/')
-        }
-      })
+      if(this.userType){//store owner
+        axios.post('http://localhost:8080/login',loginForm).then(response => {
+          if(response.data){
+            store.commit('SET_LOGIN',response.data)
+            this.$router.push('/')
+          }
+        })
+      }else {//admin store owner
+        axios.post('http://localhost:8080/adminLogin',loginForm).then(response => {
+          if(response.data){
+            store.commit('SET_LOGIN',response.data)
+            this.$router.push('/')
+          }
+        })
+      }
+
     },
     handleChangeMod(){
       this.userType = !this.userType;

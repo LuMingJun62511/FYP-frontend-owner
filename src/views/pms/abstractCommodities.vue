@@ -1,31 +1,33 @@
 <template>
   <el-row>
-    <p>这里面放筛选栏，根据这里面的条件筛选出对应的abstract，筛选栏至少有商品种类</p>
-    <el-col>
+    <el-col :span = "8">
+      <p>the commodities belong to</p>
+      <el-select v-model="categoryID" placeholder="please choose a category">
+        <el-option
+          v-for="item in options"
+          :key="item.categoryID"
+          :label="item.label"
+          :value="item.categoryID">
+        </el-option>
+      </el-select>
+    </el-col>
 
-    </el-col>
-    <el-col>
-      <p>category belong to</p>
-      <el-input name="username"
-                type="text"
-                v-model="categoryId"
-                autoComplete="on"
-                placeholder="categoryId here">
-      </el-input>
-    </el-col>
-    <el-col>
+    <el-col :span = "8">
       <p>name like</p>
       <el-input name="username"
                 type="text"
                 v-model="nameStr"
                 autoComplete="on"
-                placeholder="enter your username please">
+                placeholder="enter commodity name please">
       </el-input>
+    </el-col>
+
+    <el-col :span = "8">
+      <el-button @click="findCommodities">find products</el-button>
     </el-col>
 
   </el-row>
 
-  <p>这里面放结果，抽象商品的结果，点进去才是看仓储信息啥的</p>
   <div>
     <el-table
       :data="products"
@@ -65,17 +67,53 @@
 </template>
 
 <script>
-import commodityCard from '@/views/sms/components/commodityCard.vue'
+import axios from 'axios'
 
 export default {
-  name: 'commoditys',
-  methods: {
-    commodityCard () {
-      return commodityCard
+  name: 'commodities',
+
+  data(){
+    return {
+      options: [{
+        categoryID: 'test1',
+        label: 'test'
+      }],
+      categoryID: '',
+      nameStr: '',
+      products:[
+        // { id:401,
+        // name:'',
+        // stock:'',
+        // price:'', }
+      ]
     }
   },
-  data(){
-
+  methods:{
+    findCommodities(){
+      if(this.nameStr === ''){//如果用户没写，那不能瞎找
+        axios.get('http://localhost:8080/api/pms/productsByCategory/'+this.categoryID).then(response => {
+          this.products = response.data
+        })
+      }else {
+        axios.get('http://localhost:8080/api/pms/productsByCategoryAndNameLike/'+this.categoryID+'/'+this.nameStr).then(response => {
+          this.products = response.data
+        })
+      }
+    },
+    handleJump(id){
+      this.$router.push('/pms/specificProducts/'+id)
+    }
+  },
+  created () {
+    axios.get('http://localhost:8080/api/pms/findCategories').then(response => {
+      this.options = []
+      response.data.forEach(category =>{
+        this.options.push({
+          categoryID: category.id,
+          label: category.name
+        })
+      })
+    })
   }
 }
 </script>

@@ -54,7 +54,7 @@
             <el-form-item prop="password">
               <el-input name="password"
                         type="password"
-                        @keyup.enter="handleLogin"
+                        @keyup.enter="handleSignup(signUpForm)"
                         v-model="signUpForm.password"
                         autoComplete="on"
                         placeholder="enter your password please">
