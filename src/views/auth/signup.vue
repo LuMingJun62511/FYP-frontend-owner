@@ -9,11 +9,11 @@
         <img src="@/assets/icons/home.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
         <router-link to="/home" style="text-decoration: none; font-size: 24px">Home</router-link>
       </el-col>
-      <el-col :span="4" :offset="11">
-        <img src="@/assets/icons/login.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
-        <router-link to="/login" style="text-decoration: none; font-size: 24px">log in</router-link>
-      </el-col>
-      <el-col :span="4" >
+<!--      <el-col :span="4" :offset="11">-->
+<!--        <img src="@/assets/icons/login.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>-->
+<!--        <router-link to="/login" style="text-decoration: none; font-size: 24px">log in</router-link>-->
+<!--      </el-col>-->
+      <el-col :span="4" :offset="15">
         <img src="@/assets/icons/signup.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
         <router-link to="/home" style="text-decoration: none; font-size: 24px">sign up</router-link>
       </el-col>
@@ -29,8 +29,10 @@
         <router-link to="/home" style="text-decoration: none; font-size: 24px">Home</router-link>
       </el-col>
       <el-col :span="4" :offset="15">
-        <img src="@/assets/icons/logout.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
-        <router-link to="/home" style="text-decoration: none; font-size: 24px">log out</router-link>
+        <div class="header-button" @click="handleLogOut">
+          <img src="@/assets/icons/logout.png" style="vertical-align: middle;max-width: 50px;max-height:50px" @click="handleLogOut"/>
+          <router-link to="/logout" style="text-decoration: none; font-size: 24px">log out</router-link>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -104,7 +106,10 @@ export default {
 
       })
     },
-
+    handleLogOut(){
+      this.$store.commit('SET_LOGIN',false)
+      this.$router.push('/login')
+    }
   }
 }
 </script>

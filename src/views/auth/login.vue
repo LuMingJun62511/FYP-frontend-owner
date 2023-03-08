@@ -9,30 +9,16 @@
         <img src="@/assets/icons/home.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
         <router-link to="/home" style="text-decoration: none; font-size: 24px">Home</router-link>
      </el-col>
-      <el-col :span="4" :offset="11">
-        <img src="@/assets/icons/login.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
-        <router-link to="/login" style="text-decoration: none; font-size: 24px">log in</router-link>
-      </el-col>
-      <el-col :span="4" >
+<!--      <el-col :span="4" :offset="11">-->
+<!--        <img src="@/assets/icons/login.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>-->
+<!--        <router-link to="/login" style="text-decoration: none; font-size: 24px">log in</router-link>-->
+<!--      </el-col>-->
+      <el-col :span="4" :offset="15">
         <img src="@/assets/icons/signup.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
         <router-link to="/signup" style="text-decoration: none; font-size: 24px">sign up</router-link>
       </el-col>
     </el-row>
 
-    <el-row
-      v-if="checkLogin"
-      class="header-row"
-      align="middle"
-    >
-      <el-col :span="4" :offset="1">
-        <img src="@/assets/icons/home.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
-        <router-link to="/home" style="text-decoration: none; font-size: 24px">Home</router-link>
-      </el-col>
-      <el-col :span="4" :offset="15">
-        <img src="@/assets/icons/logout.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
-        <router-link to="/home" style="text-decoration: none; font-size: 24px">log out</router-link>
-      </el-col>
-    </el-row>
   </div>
 
   <div style="height: 70%;">
@@ -113,7 +99,7 @@ export default {
     handleLogin (loginForm) {
       const store = this.$store
       if(this.userType){//store owner
-        axios.post('http://localhost:8080/login',loginForm).then(response => {
+        axios.post('http://localhost:8080/ownerLogin',loginForm).then(response => {
           if(response.data){
             store.commit('SET_LOGIN',response.data)
             this.$router.push('/')
