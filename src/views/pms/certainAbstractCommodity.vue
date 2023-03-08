@@ -1,71 +1,82 @@
 <template>
-  <p>首先是基本信息，在基本信息里面的更改是可以提交的,只需要</p>
-  <el-form :model="product" v-if="!changing">
-    <el-form-item label="id">
-      <p>{{product.id}}</p>
-    </el-form-item>
-    <el-form-item label="name">
-      <p>{{product.name}}</p>
-    </el-form-item>
-    <el-form-item label="category_name">
-      <p>{{product.category_name}}</p>
-    </el-form-item>
-    <el-form-item label="price">
-      <p>{{product.price}}</p>
-    </el-form-item>
-    <el-form-item label="stock">
-      <p>{{product.stock}}</p>
-    </el-form-item>
-    <el-form-item label="low_stock">
-      <p>{{product.low_stock}}</p>
-    </el-form-item>
-    <el-form-item label="to_be_outbound">
-      <p>{{product.to_be_outbound}}</p>
-    </el-form-item>
-    <el-form-item label="sale">
-      <p>{{product.sale}}</p>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="startChanging">开始创建</el-button>
-    </el-form-item>
-  </el-form>
+  <el-row>
+    <el-col :span="8">
+      <div>
+        <el-form :model="product" v-if="!changing">
+          <el-form-item label="id">
+            <p>{{product.id}}</p>
+          </el-form-item>
+          <el-form-item label="name">
+            <p>{{product.name}}</p>
+          </el-form-item>
+          <el-form-item label="category_name">
+            <p>{{product.category_name}}</p>
+          </el-form-item>
+          <el-form-item label="price">
+            <p>{{product.price}}</p>
+          </el-form-item>
+          <el-form-item label="stock">
+            <p>{{product.stock}}</p>
+          </el-form-item>
+          <el-form-item label="low_stock">
+            <p>{{product.low_stock}}</p>
+          </el-form-item>
+          <el-form-item label="to_be_outbound">
+            <p>{{product.to_be_outbound}}</p>
+          </el-form-item>
+          <el-form-item label="sale">
+            <p>{{product.sale}}</p>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="startChanging">开始创建</el-button>
+          </el-form-item>
+        </el-form>
+        <el-form :model="product" v-if="changing">
+          <el-form-item label="id">
+            <p>{{product.id}}</p>
+          </el-form-item>
+          <el-form-item label="name">
+            <el-input v-model="product.name">{{product.name}}</el-input>
+          </el-form-item>
+          <el-form-item label="category">
+            <el-select v-model="product.category_id" placeholder="please choose a category">
+              <el-option
+                v-for="item in options"
+                :key="item.categoryID"
+                :label="item.label"
+                :value="item.categoryID">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="price">
+            <el-input v-model="product.price">{{product.price}}</el-input>
+          </el-form-item>
+          <el-form-item label="stock">
+            <p>{{product.stock}}</p>
+          </el-form-item>
+          <el-form-item label="low_stock">
+            <el-input v-model="product.low_stock">{{product.low_stock}}</el-input>
+          </el-form-item>
+          <el-form-item label="to_be_outbound">
+            <p>{{product.to_be_outbound}}</p>
+          </el-form-item>
+          <el-form-item label="sale">
+            <p>{{product.sale}}</p>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="finishChanging">结束创建</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-col>
+    <el-col :span="16">
+      <div>
+        <p> chart here</p>
+      </div>
+    </el-col>
+  </el-row>
 
-  <el-form :model="product" v-if="changing">
-    <el-form-item label="id">
-      <p>{{product.id}}</p>
-    </el-form-item>
-    <el-form-item label="name">
-      <el-input v-model="product.name">{{product.name}}</el-input>
-    </el-form-item>
-    <el-form-item label="category">
-      <el-select v-model="product.category_id" placeholder="please choose a category">
-        <el-option
-          v-for="item in options"
-          :key="item.categoryID"
-          :label="item.label"
-          :value="item.categoryID">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="price">
-      <el-input v-model="product.price">{{product.price}}</el-input>
-    </el-form-item>
-    <el-form-item label="stock">
-      <p>{{product.stock}}</p>
-    </el-form-item>
-    <el-form-item label="low_stock">
-      <el-input v-model="product.low_stock">{{product.low_stock}}</el-input>
-    </el-form-item>
-    <el-form-item label="to_be_outbound">
-      <p>{{product.to_be_outbound}}</p>
-    </el-form-item>
-    <el-form-item label="sale">
-      <p>{{product.sale}}</p>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="finishChanging">结束创建</el-button>
-    </el-form-item>
-  </el-form>
+
 
   <p>然后是批次信息，各个批次的信息体现一下</p>
   <div style="width: 600px;">
@@ -129,6 +140,7 @@ export default {
       this.changing = true;
     },
     finishChanging(){
+      // 这里其实是三步走，1，提交数据 2，查数据 3改状态
       this.changing = false;
     }
   },
@@ -160,7 +172,6 @@ export default {
       const regex = /^(\d{4}-\d{2}-\d{2})/
       response.data.forEach(batch =>{
         const datePart = batch.bbd.match(regex)[1];
-        console.log(datePart)
         this.batches.push({
           id: batch.id,
           amount: batch.amount,

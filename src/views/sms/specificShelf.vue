@@ -183,18 +183,12 @@ export default {
       _this.rowNum = res.data.rowNum
       _this.colNum = res.data.colNum
       _this.categoryId = res.data.categoryId
-      // console.log("第一个执行")
-      // console.log(res.data)
     })
     await axios.get('http://localhost:8080/api/sms/getItems/'+_this.shelfID).then(function (res) {
-      // console.log("第二个执行")
       _this.fromExist = _this.startTrimUpper(res.data,_this.rowNum)
     })
 
     await axios.get('http://localhost:8080/api/pms/productsByCategory/'+_this.categoryId).then(function (res) {
-      // console.log("第三个执行")
-      // console.log(_this.categoryId)
-      // console.log(res.data)
       _this.fromDatabase = _this.startTrimLower(res.data)
     })
 
@@ -357,7 +351,6 @@ export default {
       // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
       axios.post('http://localhost:8080/api/sms/sortByCreated/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
-        console.log(this.fromExist)
       })
     },
     autoSortBySale(){
@@ -375,7 +368,6 @@ export default {
       }
       axios.post('http://localhost:8080/api/sms/sortBySales/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
-        console.log(this.fromExist)
       })
     },
     autoSortByBBD(){
@@ -394,28 +386,24 @@ export default {
       // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
       axios.post('http://localhost:8080/api/sms/sortByBBD/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
-        // console.log(this.fromExist)
       })
     },
     autoFindByCreated(){
       const categoryID = this.categoryID
       axios.get('http://localhost:8080/api/pms/findProductsByCreated/'+categoryID).then(response => {
         this.fromDatabase = this.startTrimLower(response.data)
-        // console.log(this.fromDatabase)
       })
     },
     autoFindBySale(){
       const categoryID = this.categoryID
       axios.get('http://localhost:8080/api/pms/findProductsBySale/'+categoryID).then(response => {
         this.fromDatabase = this.startTrimLower(response.data)
-        // console.log(this.fromDatabase)
       })
     },
     autoFindByBBD(){
       const categoryID = this.categoryID
       axios.get('http://localhost:8080/api/pms/findProductsByBBD/'+categoryID).then(response => {
         this.fromDatabase = this.startTrimLower(response.data)
-        // console.log(this.fromDatabase)
       })
     },
   }

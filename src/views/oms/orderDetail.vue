@@ -40,7 +40,7 @@ export default {
   created () {
     axios.get('http://localhost:8080/api/order/orderItems/'+this.orderID).then(response => {
       this.orders = response.data
-      console.log(this.orders)
+      // console.log(this.orders)
     })
   }
 }

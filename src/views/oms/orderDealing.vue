@@ -396,8 +396,8 @@ export default {
         this.tempProducts.forEach(product => {
           this.tempStock.forEach(stockItem => {
             if(product.product_id === stockItem.product_id) {
-              console.log(product.product_id)
-              console.log(stockItem.product_temp_stock)
+              // console.log(product.product_id)
+              // console.log(stockItem.product_temp_stock)
               product.product_temp_stock = stockItem.product_temp_stock
             }
           })

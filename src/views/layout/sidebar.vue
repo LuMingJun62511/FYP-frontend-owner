@@ -13,7 +13,7 @@
       </template>
       <el-menu-item-group title="Shelf Management">
         <router-link to="/sms/createShelf" style="text-decoration: none">
-          <el-menu-item index="shelfManage">create a new shelf(empty now)</el-menu-item>
+          <el-menu-item index="shelfManage">create a new shelf</el-menu-item>
         </router-link>
         <router-link to="/sms/shelfManage" style="text-decoration: none">
           <el-menu-item index="shelfManage">shelf manage</el-menu-item>
@@ -62,12 +62,7 @@ export default {
     }
   },
   methods: {
-    // handleOpen(key, keyPath) {
-    //   console.log(key, keyPath)
-    // },
-    // handleClose(key, keyPath){
-    //   console.log(key, keyPath)
-    // }
+
   }
 }
 </script>
