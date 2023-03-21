@@ -1,9 +1,9 @@
 <template xmlns:el-col="http://www.w3.org/1999/html">
-  <p>处理这一周的网购订单</p>
+  <p>Process this week's online shopping orders</p>
   <el-steps :active="steps" finish-status="success">
-    <el-step title="处理本周所有订单"></el-step>
-    <el-step title="手动处理有问题的订单"></el-step>
-    <el-step title="review所有receipt"></el-step>
+    <el-step title="Process all orders for this week"></el-step>
+    <el-step title="Process orders with problem manually"></el-step>
+    <el-step title="review all receipts"></el-step>
   </el-steps>
   <div class="container">
     <div v-if="steps === 0">
@@ -16,8 +16,8 @@
             <template v-slot="props">
               <el-row >
                 <el-col :span="8">id</el-col>
-                <el-col :span="8">名称</el-col>
-                <el-col :span="8">数量</el-col>
+                <el-col :span="8">name</el-col>
+                <el-col :span="8">amount</el-col>
               </el-row>
               <div v-for="item in props.row.items">
                 <div v-if="item.lack === 1" class="lack-one" style="background-color: rgb(250,201,210)">
@@ -101,9 +101,9 @@
             <template v-slot="props">
               <el-row>
                 <el-col :span="6">id</el-col>
-                <el-col :span="6">名称</el-col>
-                <el-col :span="6">所需数量</el-col>
-                <el-col :span="6">操作</el-col>
+                <el-col :span="6">name</el-col>
+                <el-col :span="6">amount needed</el-col>
+                <el-col :span="6">operation</el-col>
               </el-row>
               <div v-for="item in props.row.items">
                 <div v-if="item.lack === 1" class="lack-one" style="background-color: rgb(250,201,210)">
@@ -113,7 +113,7 @@
                     <el-col :span="6">{{item.amount}}</el-col>
                     <el-col :span="6">
                       <el-button @click="chooseItemToHandle(props.row.id,item)">
-                        处理此物品
+                        find alt for this
                       </el-button>
                     </el-col>
                   </el-row>
@@ -152,10 +152,10 @@
       </div>
       <div v-if="tempOrderItem.product_id">
         <el-row>
-          <el-col :span = "6">您目前在处理的商品是</el-col>
-          <el-col :span = "6">一共需要</el-col>
-          <el-col :span = "6">目前可用库存</el-col>
-          <el-col :span = "6">至少还需要</el-col>
+          <el-col :span = "6">The item you are currently processing is</el-col>
+          <el-col :span = "6">total need</el-col>
+          <el-col :span = "6">currently available stock</el-col>
+          <el-col :span = "6">need at least</el-col>
         </el-row>
         <div v-if="tempLackedItemInStock.product_id">
           <el-row>
@@ -170,9 +170,9 @@
       <div>
         <el-row>
           <el-col :span="6">id</el-col>
-          <el-col :span="6">名称</el-col>
-          <el-col :span="6">剩余数量</el-col>
-          <el-col :span="6"> 选择数量</el-col>
+          <el-col :span="6">name</el-col>
+          <el-col :span="6">amount left</el-col>
+          <el-col :span="6"> your choice</el-col>
         </el-row>
         <div v-for="(item,index) in tempProducts" :key="index">
             <el-row>
@@ -190,16 +190,16 @@
     </div>
 
     <div v-if="steps === 2">
-      <div style="width: 1000px">
+      <div style="width: 1100px">
         <el-table
           :data="receipts"
           style="width: 100%">
           <el-table-column type="expand">
             <template v-slot="props">
               <el-row>
-                <el-col :span="8">名称</el-col>
-                <el-col :span="8">数量</el-col>
-                <el-col :span="8">总价</el-col>
+                <el-col :span="8">name</el-col>
+                <el-col :span="8">amount</el-col>
+                <el-col :span="8">total price</el-col>
               </el-row>
               <div v-for="item in props.row.items">
                 <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,242,201)">
@@ -249,9 +249,9 @@
             </template>
           </el-table-column>
         </el-table>
-        <p>您已经处理完所有订单，以下是生成的现在是否要开始出货呢，如果要开始出货，请点击以跳转到出货界面</p>
+        <p>You have processed all the orders, the next step is to outbound, do you want to outbound now? If you do, please click to jump to the outbound page</p>
         <el-button @click="jumpToOutbound">
-          跳到处理
+          jump to outbound
         </el-button>
       </div>
     </div>
@@ -293,8 +293,6 @@ export default {
       if(this.unhandledOrders.length === 0){
         this.steps = 2;
         this.addItemsToReceipt()
-        // console.log(this.receipts)
-        // console.log(this.receiptItems)
       }
     },
     //可能改变数组长度的方法要从后向前遍历
@@ -319,7 +317,6 @@ export default {
         })
         this.tempStock = copyStock//全判断完了，可以指过去了
       })//这里才是一张订单上的所有item都跑了一遍，那么，我就需要查看这份订单是否有问题了
-      //可重构抽成dealUnhandledOrdersWithoutProblem
       if (order.hasProblem === 0){//如果检查完，这份订单是可处理的,则可删去，
         this.dealUnhandledOrdersWithoutProblem(order)
       }
@@ -339,13 +336,13 @@ export default {
     generateReceipt(order){
       this.receipts.push({
         id:order.id,
-        member_id:order.member.id,
-        order_id:order.id,
-        receiver_id:order.receiver.id,
-        total_amount:order.totalAmount,
-        pay_amount:order.payAmount,
-        delivery_amount:order.deliveryAmount,
-        discount_amount:order.discountAmount,
+        memberId:order.member.id,
+        orderId:order.id,
+        receiverId:order.receiver.id,
+        totalAmount:order.totalAmount,
+        payAmount:order.payAmount,
+        deliveryAmount:order.deliveryAmount,
+        discountAmount:order.discountAmount,
         status:0
       })
     },
@@ -354,6 +351,7 @@ export default {
       order.items.forEach(item =>{
         this.receiptItems.push({
           receipt_id:order.id,
+          product_id:item.product_id,
           product_name:item.product_name,
           total_price:item.amount*item.price,//只记一总价，而且这个时候，对应的单价也已经被改了，所以不用担心
           amount:item.amount,
@@ -396,8 +394,6 @@ export default {
         this.tempProducts.forEach(product => {
           this.tempStock.forEach(stockItem => {
             if(product.product_id === stockItem.product_id) {
-              // console.log(product.product_id)
-              // console.log(stockItem.product_temp_stock)
               product.product_temp_stock = stockItem.product_temp_stock
             }
           })
@@ -410,18 +406,15 @@ export default {
         this.manualUpdateOrderItems() //1，更新order items,把实际能给的给到，再把新增的替代品添加进来，更改需求
         this.manualAddItemsToStock()//2把因选替代品而要在待用库存中用到的东西添加进去
         this.checkAllUnhandledOrders()//3，全检查一遍未处理订单，因为要出货，其他订单和本订单都只有变坏的可能，可此订单是好坏参半，也有可能成为可处理订单，所以需要检查
-
         if(this.tempOrder.items.every(item => item.lack === 0)){//4判断一下，这个订单里面是否都ok，如果都ok,就标记这份订单为处理过了，然后把他放到handledOrders里
           this.tempOrder.hasProblem = 0
           this.manualUpdateStock() //5，要虚拟出库了，这时才更新库存tempStock，
           this.dealUnhandledOrdersWithoutProblem(this.tempOrder)//6更新unhandled,生成receipt相关,
           this.checkAllUnhandledOrders()//7虚拟出库了，所以其他订单可能变坏，这就需要再全检查一遍
-
         }
         this.tempProducts = []
         this.tempOrder = []
         this.tempLackedItemInStock = []
-        //这个算处理bug,因为我在最外围
       }
     },
 
@@ -510,19 +503,52 @@ export default {
       })
     },
 
-    updateReceipt(){
-
+    async updateReceipt () {
+      let res = []
+      await this.receipts.forEach(receipt => {
+        res.push({
+          member: { id: receipt.memberId },
+          order: { id: receipt.orderId },
+          receiver: { id: receipt.receiverId },
+          totalAmount: receipt.totalAmount,
+          payAmount: receipt.payAmount,
+          deliveryAmount: receipt.deliveryAmount,
+          discountAmount: receipt.discountAmount,
+          status: receipt.status
+        })
+      })
+      await axios.post('http://localhost:8080/api/oms/receiptsSaving', res).then(response => {
+        console.log(response.status)
+      })
     },
 
     updateReceiptItems(){
-
+      let res = []
+      this.receiptItems.forEach(receiptItem=>{
+        res.push({
+          receiptId:receiptItem.receipt_id,
+          productId:receiptItem.product_id,
+          batchId:0,
+          totalPrice:receiptItem.total_price,
+          amount:receiptItem.amount,
+          status:receiptItem.status
+        })
+      })
+      axios.post('http://localhost:8080/api/oms/receiptItemsSaving',res).then(response =>{
+        console.log(response.status)
+      })
     },
 
     updateOrders(){
-
+      //主要是把没处理的这些标识为处理过的
     },
 
     abolishReceipt(receiptID){
+      //删去指定物品，牵涉到，首先，仓储还在？
+      //删去指定物品就要更新仓储，把东西加回去
+
+      //然后把他作为订单？，不行，这时候已经丢失了他是谁的同替，所以得加他替了谁，在最终receipt里，
+
 
     },
 
@@ -539,7 +565,6 @@ export default {
       } else {
         this.tempProducts[index].product_chosen = chosen;
       }
-      // console.log(this.tempProducts)
     },
 
     deepCopy (obj) {
@@ -553,12 +578,11 @@ export default {
         return acc + cur.product_chosen;
       }, 0);
     }
-
   },
 
   async created () {
     //   第一步，查订单
-    await axios.get('http://localhost:8080/api/order/ordersThisWeek').then(response => {
+    await axios.get('http://localhost:8080/api/oms/ordersThisWeek').then(response => {
       response.data.forEach(element =>{
         if(element.status === 1){
           this.handledOrders.push(element)
@@ -570,7 +594,7 @@ export default {
     })
     //   第二,三步，查物品及库存
     await this.unhandledOrders.forEach(order =>{
-      axios.get('http://localhost:8080/api/order/orderItems/'+order.id).then(response => {
+      axios.get('http://localhost:8080/api/oms/orderItems/'+order.id).then(response => {
         let tempOrderItems = []
         response.data.forEach(item=>{
           tempOrderItems.push({

@@ -10,8 +10,9 @@ import { onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
 
 export default {
-  name: "echartsBox",
-  setup() {
+  name: "echartsBox2",
+  props:['productID'],
+  setup(props) {
     let echart = echarts;
     let chartData = [];
 
@@ -51,8 +52,7 @@ export default {
 
     onMounted(async () => {
       // 使用axios获取数据
-      let productID = this.$route.params.id
-      const response = await axios.get('http://localhost:8080/api/pms/productDataForChart'+productID);
+      const response = await axios.get('http://localhost:8080/api/pms/productDataForChart/'+props.productID);
       chartData = response.data;
       initChart();
     });

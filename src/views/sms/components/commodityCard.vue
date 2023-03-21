@@ -39,7 +39,8 @@ export default {
       //如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
       d1 = d1.replace('T', " ")
       d1 = d1.replace('Z', "")
-      let dateEnd = new Date();//获取当前时间
+      // let dateEnd = new Date();//获取当前时间
+      let dateEnd = new Date(2023, 4, 10);//改为Dday时间了，js特有的，月份从0开始，所以这就是5月10号
       let dateDiff = dateEnd.getTime() - new Date(d1).getTime();//时间差的毫秒数
       let dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000));//计算出相差天数
       return dayDiff

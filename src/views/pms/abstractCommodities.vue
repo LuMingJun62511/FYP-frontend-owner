@@ -39,17 +39,17 @@
       </el-table-column>
       <el-table-column
         label="product name"
-        prop="rowNum"
+        prop="name"
         width="180">
       </el-table-column>
       <el-table-column
         label="stock"
-        prop="colNum"
+        prop="stock"
         width="180">
       </el-table-column>
       <el-table-column
         label="price"
-        prop="note"
+        prop="price"
         width="180">
       </el-table-column>
       <el-table-column

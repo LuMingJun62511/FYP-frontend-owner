@@ -71,7 +71,9 @@
     </el-col>
     <el-col :span="16">
       <div>
-        <p> chart here</p>
+        <p>chart here</p>
+        <echarts-box2 :productID = this.product.id></echarts-box2>
+<!--        这里一个问题，怎么往这个组件里传productID，解决了，图就画好了-->
       </div>
     </el-col>
   </el-row>
@@ -105,9 +107,11 @@
 
 <script>
 import axios from 'axios'
+import EchartsBox2 from '@/views/pms/components/lineChart.vue'
 
 export default {
   name: 'specificAbstractCommodity',
+  components: { EchartsBox2 },
   data(){
     return{
       changing:false,
