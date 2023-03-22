@@ -12,8 +12,8 @@
         <span>Offline store Management</span>
       </template>
       <el-menu-item-group title="Shelf Management">
-        <router-link to="/sms/createShelf" style="text-decoration: none">
-          <el-menu-item index="shelfManage">create a new shelf</el-menu-item>
+        <router-link to="/sms/shelfCreation" style="text-decoration: none">
+          <el-menu-item index="shelfCreation">create a new shelf</el-menu-item>
         </router-link>
         <router-link to="/sms/shelfManage" style="text-decoration: none">
           <el-menu-item index="shelfManage">shelf manage</el-menu-item>
@@ -33,10 +33,10 @@
 
       <el-menu-item-group title="Inbound/Outbound Management">
         <router-link to="/ims/outbound" style="text-decoration: none">
-          <el-menu-item index="outbound">outbound (empty now)</el-menu-item>
+          <el-menu-item index="outbound">outbound</el-menu-item>
         </router-link>
         <router-link to="/ims/inbound" style="text-decoration: none">
-          <el-menu-item index="inbound">inbound (empty now)</el-menu-item>
+          <el-menu-item index="inbound">inbound</el-menu-item>
         </router-link>
       </el-menu-item-group>
 

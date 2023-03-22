@@ -107,14 +107,19 @@ const routes = [
     component: Layout,
     children: [
       {
-        path: 'shelf/:id',
-        name: 'one shelf',
-        component: () => import('@/views/sms/specificShelf.vue')
+        path: 'shelfCreation',
+        name: 'shelfCreation',
+        component: () => import('@/views/sms/createShelf.vue')
       },
       {
         path: 'shelfManage',
         name: 'shelfManage',
-        component: () => import('@/views/sms/shelves.vue')
+        component: () => import('@/views/sms/manageShelves.vue')
+      },
+      {
+        path: 'shelf/:id',
+        name: 'one shelf',
+        component: () => import('@/views/sms/specificShelf.vue')
       },
     ],
     beforeEnter(to, from, next){

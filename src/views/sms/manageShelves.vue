@@ -41,7 +41,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'shelves',
+  name: 'manageShelves',
   data() {
     return {
       shelves:[],
