@@ -64,7 +64,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'index',
+  name: 'outbound',
   data(){
     return{
       receipts:[], //因为生成了订单后，也得生成收据，所以就也得维护一个这个，这个在这里维护的时候是整体，推上去更新的时候分开推，比较好办
