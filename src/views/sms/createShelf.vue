@@ -1,8 +1,11 @@
 <template>
-  <p>创建新shelf</p>
+  <p>create a new shelf</p>
   <el-form :data="newShelf">
+    <el-form-item label="id">
+      <el-input v-model="newShelf.id"></el-input>
+    </el-form-item>
     <el-form-item label="category">
-      <el-select v-model="newShelf.category_id" placeholder="please choose a category">
+      <el-select v-model="newShelf.categoryId" placeholder="please choose a category">
         <el-option
           v-for="item in options"
           :key="item.categoryID"
@@ -38,7 +41,8 @@ export default {
         label: 'test'
       }],
       newShelf:{
-        category_id:0,
+        id:0,
+        categoryId:0,
         rowNum:0,
         colNum:0,
         note:"lalala"
@@ -48,8 +52,19 @@ export default {
   },
   methods:{
     //新创建的shelf还得自动填充一下，
-    createShelf(){
+    async createShelf(){
+      await axios.post('http://localhost:8080/api/sms/createOneShelf',this.newShelf).then(response =>{
+        console.log(response.status)
+      })
 
+      await axios.post('http://localhost:8080/api/sms/autoFillShelf/',this.newShelf).then(response =>{
+        console.log(response.status)
+      })
+      await this.handleJump(this.newShelf.id)
+    },
+
+    handleJump(id){
+      this.$router.push('/sms/shelf/'+id)
     }
   },
   created () {
@@ -63,7 +78,6 @@ export default {
       })
     })
   }
-
 }
 </script>
 

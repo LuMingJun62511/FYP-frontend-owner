@@ -11,12 +11,18 @@
 
 <script>
 export default {
-  name: 'index',
+  name: 'inbound',
   data(){
     return{
       receiptId:''
     }
   },
+  methods:{
+
+  },
+  created () {
+
+  }
 }
 </script>
 
