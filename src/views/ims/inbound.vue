@@ -1,17 +1,8 @@
 <template>
-  <p>有哪个receipt的东西被退货了，就查一下看看</p>
-  <el-input name="receiptId"
-            type="text"
-            v-model="receiptId"
-            autoComplete="on"
-            placeholder="enter receipt ID please">
-  </el-input>
-  <el-button @click="findReceiptById">
-    查找收据
-  </el-button>
+  <p>Here are the receipts with items to return</p>
   <div style="width: 1100px">
     <el-table
-      :data="receipt"
+      :data="receipts"
       style="width: 100%">
       <el-table-column type="expand">
         <template v-slot="props">
@@ -22,24 +13,22 @@
             <el-col :span="6">operation</el-col>
           </el-row>
           <div v-for="item in props.row.items">
-            <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,242,201)">
+            <div v-if="item.status === 2" class="to-return" style="background-color: rgb(250,242,201)">
               <el-row>
                 <el-col :span="6">{{item.product_id}}</el-col>
                 <el-col :span="6">{{item.amount}}</el-col>
                 <el-col :span="6">{{item.total_price}}</el-col>
                 <el-col :span="6">
-                  <el-button @click="chooseItemToReturn(item)">return this one</el-button>
+                  <el-button @click="chooseItemToReturn(item)">check this one</el-button>
                 </el-col>
               </el-row>
             </div>
-            <div v-if="item.status === 0" class="not-lack-one">
+            <div v-if="item.status === 0 || item.status === 1" class="not-to-return">
               <el-row>
                 <el-col :span="6">{{item.product_id}}</el-col>
                 <el-col :span="6">{{item.amount}}</el-col>
                 <el-col :span="6">{{item.total_price}}</el-col>
-                <el-col :span="6">
-                  <el-button @click="chooseItemToReturn(item)">return this one</el-button>
-                </el-col>
+                <el-col :span="6">no operation</el-col>
               </el-row>
             </div>
           </div>
@@ -72,23 +61,52 @@
       </el-table-column>
     </el-table>
   </div>
-  <p>下面是查出来的，然后写点函数，更新一下batch, product, receiptItem</p>
-  <div v-if="itemToReturn.product_id">
-    <el-form :data="itemToReturn">
-      <el-form-item label="which product">
-        <el-input v-model="itemToReturn.product_id"></el-input>
-      </el-form-item>
-      <el-form-item label="which batch">
-        <el-input v-model="itemToReturn.batch_id"></el-input>
-      </el-form-item>
-      <el-form-item label="amount">
-        <el-input v-model="itemToReturn.amount"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="updateAll(itemToReturn)">结束创建</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+  <el-row>
+    <el-col :span="8">
+      <div>
+        <p>to return items</p>
+        <el-form :data="itemToReturn">
+          <el-form-item label="which product">
+            <p>{{itemToReturn.product_id}}</p>
+          </el-form-item>
+          <el-form-item label="which batch">
+            <p>{{itemToReturn.batch_id}}</p>
+          </el-form-item>
+          <el-form-item label="amount">
+            <p>{{itemToReturn.amount}}</p>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-col>
+    <el-col :span="8">
+      <p>product Info</p>
+      <el-form :data="productInfo">
+        <el-form-item label="product name">
+          <p>{{productInfo.name}}</p>
+        </el-form-item>
+        <el-form-item label="how many left">
+          <p>{{productInfo.stock}}</p>
+        </el-form-item>
+        <el-form-item label="single price">
+          <p>{{productInfo.price}}</p>
+        </el-form-item>
+      </el-form>
+    </el-col>
+    <el-col :span="8">
+      <p>batch Info</p>
+      <el-form :data="batchInfo">
+        <el-form-item label="how many left">
+          <p>{{batchInfo.amount}}</p>
+        </el-form-item>
+        <el-form-item label="BBD">
+          <p>{{batchInfo.bbd}}</p>
+        </el-form-item>
+      </el-form>
+    </el-col>
+  </el-row>
+
+  <el-button @click="returnAllItems">return all items</el-button>
+
 </template>
 
 <script>
@@ -99,29 +117,23 @@ export default {
   data(){
     return{
       receiptId:0,
-      receipt:[{}],
-      itemToReturn:{}
+      receipts:[],
+      itemToReturn:{},
+      productInfo:{},
+      batchInfo:{}
     }
   },
   methods:{
-    async findReceiptById(){
-      await axios.get('http://localhost:8080/api/ims/receipt/'+this.receiptId).then(response => {
-        this.receipt[0] = response.data
-      })
-      await axios.get('http://localhost:8080/api/ims/receiptItemsByReceiptId/'+this.receiptId).then(response => {
-        let receiptItems = []
-        response.data.forEach(item=>{
-          receiptItems.push({
-            receipt_id:item.receipt.id,
-            product_id:item.product.id,
-            batch_id:item.batch.id,
-            total_price:item.totalPrice,
-            amount:item.amount,
-            status:item.status
-          })
+    returnAllItems(){
+      for (let i = this.receipts.length - 1; i >= 0; i--) {
+        this.receipts[i].items.forEach(item=>{
+          if(item.status === 2){
+            this.returnThisItem(item)
+          }
         })
-        this.receipt[0].items = receiptItems;
-      })
+        //反正我默认处理完了，就把receipt删去了吧
+        this.receipts.splice(i, 1)
+      }
     },
 
     chooseItemToReturn(item){
@@ -130,12 +142,21 @@ export default {
       this.itemToReturn.batch_id=item.batch_id
       this.itemToReturn.total_price=item.totalPrice
       this.itemToReturn.amount=item.amount
+      axios.get('http://localhost:8080/api/ims/productInfo/'+item.product_id).then(response => {
+        this.productInfo = response.data
+        console.log(this.productInfo)
+      })
+      axios.get('http://localhost:8080/api/ims/batchInfo/'+item.batch_id).then(response => {
+        this.batchInfo = response.data
+        console.log(this.batchInfo)
+      })
     },
 
-    updateAll(itemToReturn){
+    returnThisItem(itemToReturn){
       this.updateBatch(itemToReturn.batch_id,itemToReturn.amount);
       this.updateProduct(itemToReturn.product_id,itemToReturn.amount);
       this.updateReceiptItem(itemToReturn.receipt_id,itemToReturn.product_id,itemToReturn.batch_id,itemToReturn.amount);
+      this.updateReceipt(itemToReturn.receipt_id)
     },
 
     updateBatch(batchId,amount){
@@ -143,19 +164,48 @@ export default {
         console.log(response.status)
       })
     },
+
     updateProduct(productId,amount){
       axios.post('http://localhost:8080/api/ims/updateProduct/'+productId+'/'+amount).then(response => {
         console.log(response.status)
       })
     },
+
     updateReceiptItem(receiptId,productId,batchId,amount){
       axios.post('http://localhost:8080/api/ims/updateReceiptItems/'+amount,{receiptId,productId,batchId}).then(response => {
         console.log(response.status)
       })
-      //在后端记得判断一下，如果这单
     },
 
+    updateReceipt(receiptId){
+      axios.post('http://localhost:8080/api/ims/updateReceipt/'+ receiptId).then(response => {
+        console.log(response.status)
+      })
+    },
   },
+
+  async created () {
+    await axios.get('http://localhost:8080/api/ims/toReturnReceipts').then(response => {//还没实现，就是取status为2的receipt,
+      this.receipts = response.data
+    })
+    await this.receipts.forEach(receipt=>{
+      axios.get('http://localhost:8080/api/ims/receiptItemsByReceiptId/'+receipt.id).then(response => {
+        let receiptItems = []
+        response.data.forEach(item=>{
+          receiptItems.push({
+            receipt_id:receipt.id,
+            product_id:item.product.id,
+            batch_id:item.batch.id,
+            total_price:item.totalPrice,
+            amount:item.amount,
+            status:item.status
+          })
+        })
+        receipt.items = receiptItems;
+      })
+    })
+
+  }
 }
 </script>
 
