@@ -1,66 +1,40 @@
 <template>
-  <div style="align-content: center">
-    <p>the shelf you are manipulating is number {{shelfID}}</p>
-  </div>
-  <el-row align="middle">
-    <el-col :span="6" :offset="3">
-      <img src="@/assets/icons/new.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
-      <p>newly created</p>
-    </el-col>
+  <el-card shadow="always">
+    <div style="align-content: center">
+      <p>the shelf you are manipulating is number {{shelfID}}</p>
+    </div>
+    <el-row align="middle">
+      <el-col :span="6" :offset="3">
+        <img src="@/assets/icons/new.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
+        <p>newly created</p>
+      </el-col>
 
-    <el-col :span="6">
-      <img src="@/assets/icons/hotSale.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
-      <p>hot sale</p>
-    </el-col>
+      <el-col :span="6">
+        <img src="@/assets/icons/hotSale.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
+        <p>hot sale</p>
+      </el-col>
 
-    <el-col :span="6">
-      <img src="@/assets/icons/urgent.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
-      <p>have batches near BBD</p>
-    </el-col>
-  </el-row>
+      <el-col :span="6">
+        <img src="@/assets/icons/urgent.png" style="vertical-align: middle;max-width: 30px;max-height:30px "/>
+        <p>have batches near BBD</p>
+      </el-col>
+    </el-row>
+  </el-card>
 
-
-  <div class="upper-area">
-    <Container
-      orientation="vertical"
-      drag-handle-selector=".column-drag-handle"
-      :drop-placeholder="upperDropPlaceholderOptions"
-    >
-      <Draggable v-for="column in fromExist.children" :key="column.id">
-        <div class="card-container">
-          <Container
-            orientation="horizontal"
-            group-name="col"
-            @drop="(e) => onCardDropUpper(column.id, e)"
-            :get-child-payload="getCardPayloadUpper(column.id)"
-            drag-class="card-ghost"
-            drop-class="card-ghost-drop"
-            :drop-placeholder="dropPlaceholderOptions"
-          >
-            <Draggable v-for="card in column.children" :key="card.id">
-              <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :sale = card.sale :createdTime = card.createdTime ></CommodityCard>
-            </Draggable>
-          </Container>
-        </div>
-      </Draggable>
-    </Container>
-  </div>
-
-  <div class="lower-area">
-    <el-scrollbar >
+  <el-card shadow="always">
+    <div class="upper-area">
       <Container
-        class="toBeAddedList"
-        orientation="horizontal"
+        orientation="vertical"
         drag-handle-selector=".column-drag-handle"
         :drop-placeholder="upperDropPlaceholderOptions"
       >
-        <Draggable v-for="column in fromDatabase.children" :key="column.id">
+        <Draggable v-for="column in fromExist.children" :key="column.id">
           <div class="card-container">
             <Container
               orientation="horizontal"
               group-name="col"
-              @drop="(e) => onCardDropLower(column.id, e)"
-              :get-child-payload="getCardPayloadLower(column.id)"
+              @drop="(e) => onCardDropUpper(column.id, e)"
+              :get-child-payload="getCardPayloadUpper(column.id)"
               drag-class="card-ghost"
               drop-class="card-ghost-drop"
               :drop-placeholder="dropPlaceholderOptions"
@@ -72,65 +46,96 @@
           </div>
         </Draggable>
       </Container>
-    </el-scrollbar>
-  </div>
+    </div>
+    <div class="lower-area">
+      <el-scrollbar >
+        <Container
+          class="toBeAddedList"
+          orientation="horizontal"
+          drag-handle-selector=".column-drag-handle"
+          :drop-placeholder="upperDropPlaceholderOptions"
+        >
+          <Draggable v-for="column in fromDatabase.children" :key="column.id">
+            <div class="card-container">
+              <Container
+                orientation="horizontal"
+                group-name="col"
+                @drop="(e) => onCardDropLower(column.id, e)"
+                :get-child-payload="getCardPayloadLower(column.id)"
+                drag-class="card-ghost"
+                drop-class="card-ghost-drop"
+                :drop-placeholder="dropPlaceholderOptions"
+              >
+                <Draggable v-for="card in column.children" :key="card.id">
+                  <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :sale = card.sale :createdTime = card.createdTime ></CommodityCard>
+                </Draggable>
+              </Container>
+            </div>
+          </Draggable>
+        </Container>
+      </el-scrollbar>
+    </div>
+  </el-card>
 
-  <div class="button-container">
-    <p>——————————————————————————————————————————————————</p>
-    <p>functional button area</p>
-    <p>——————————————————————————————————————————————————</p>
+  <el-card shadow="always">
+    <div class="button-container">
+      <p>——————————————————————————————————————————————————</p>
+      <p>functional button area</p>
+      <p>——————————————————————————————————————————————————</p>
 
-    <el-row
-      class="operate-button-container"
-      align="middle"
-    >
-      <el-col :span="6">
-        <p>auto sort</p>
-      </el-col>
-      <el-col :span="6">
-        <el-button @click="autoSortByBBD">according BBD</el-button>
-      </el-col>
-      <el-col :span="6">
-        <el-button @click="autoSortBySale">according sale amount</el-button>
-      </el-col>
-      <el-col :span="6">
-        <el-button @click="autoSortByCreated">according created time</el-button>
-      </el-col>
-    </el-row>
+      <el-row
+        class="operate-button-container"
+        align="middle"
+      >
+        <el-col :span="6">
+          <p>auto sort</p>
+        </el-col>
+        <el-col :span="6">
+          <el-button @click="autoSortByBBD">according BBD</el-button>
+        </el-col>
+        <el-col :span="6">
+          <el-button @click="autoSortBySale">according sale amount</el-button>
+        </el-col>
+        <el-col :span="6">
+          <el-button @click="autoSortByCreated">according created time</el-button>
+        </el-col>
+      </el-row>
 
-    <el-row
-      class="operate-button-container"
-      align="middle"
-    >
-      <el-col :span="6">
-        <p>new to be added</p>
-      </el-col>
-      <el-col :span="6">
-        <el-button @click="autoFindByBBD">according BBD</el-button>
-      </el-col>
-      <el-col :span="6">
-        <el-button @click="autoFindBySale">according sale amount</el-button>
-      </el-col>
-      <el-col :span="6">
-        <el-button @click="autoFindByCreated">according create time</el-button>
-      </el-col>
-    </el-row>
+      <el-row
+        class="operate-button-container"
+        align="middle"
+      >
+        <el-col :span="6">
+          <p>new to be added</p>
+        </el-col>
+        <el-col :span="6">
+          <el-button @click="autoFindByBBD">according BBD</el-button>
+        </el-col>
+        <el-col :span="6">
+          <el-button @click="autoFindBySale">according sale amount</el-button>
+        </el-col>
+        <el-col :span="6">
+          <el-button @click="autoFindByCreated">according create time</el-button>
+        </el-col>
+      </el-row>
 
-    <el-row
-      class="operate-button-container"
-      align="middle"
-    >
-      <el-col :span="6">
-        <p>finished?</p>
-      </el-col>
-      <el-col :span="9">
-        <el-button @click="saveShelf">save this shelf</el-button>
-      </el-col>
-      <el-col :span="9">
-        <el-button @click="deleteShelf">delete this shelf</el-button>
-      </el-col>
-    </el-row>
-  </div>
+      <el-row
+        class="operate-button-container"
+        align="middle"
+      >
+        <el-col :span="6">
+          <p>finished?</p>
+        </el-col>
+        <el-col :span="9">
+          <el-button @click="saveShelf">save this shelf</el-button>
+        </el-col>
+        <el-col :span="9">
+          <el-button @click="deleteShelf">delete this shelf</el-button>
+        </el-col>
+      </el-row>
+    </div>
+  </el-card>
+
 </template>
 
 

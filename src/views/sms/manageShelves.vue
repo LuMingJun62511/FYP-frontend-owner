@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-card shadow="always">
     <el-table
       :data="shelves"
       style="width: 100%">
@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
     </el-table>
-  </div>
+  </el-card>
 
 </template>
 

@@ -68,8 +68,9 @@
     </el-row>
   </div>
 
-  <div style="height: 20%;">
-    <img src="@/assets/images/login_center_bg.png" class="login-center-layout">
+  <div class="footer">
+    <img src="@/assets/images/setu.png" class="setu" style="vertical-align: middle;max-width: 100px;max-height:100px ">
+    <p>Shop Ease developed by Yikun Fan</p>
   </div>
 
 </template>
@@ -128,11 +129,17 @@ export default {
   height:80px;
 }
 
-.login-center-layout {
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: #a1e9d2;
-  max-width: 100%;
-  max-height: 100%;
-  margin-top: 100px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 10%;
+  text-align: center;
 }
 
 </style>

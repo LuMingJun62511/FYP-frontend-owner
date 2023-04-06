@@ -1,34 +1,37 @@
 <template>
-  <el-row>
-    <el-col :span = "8">
-      <p>the commodities belong to</p>
-      <el-select v-model="categoryID" placeholder="please choose a category">
-        <el-option
-          v-for="item in options"
-          :key="item.categoryID"
-          :label="item.label"
-          :value="item.categoryID">
-        </el-option>
-      </el-select>
-    </el-col>
+  <el-card shadow="always">
+    <el-row>
+      <el-col :span = "8">
+        <p>the commodities belong to</p>
+        <el-select v-model="categoryID" placeholder="please choose a category">
+          <el-option
+            v-for="item in options"
+            :key="item.categoryID"
+            :label="item.label"
+            :value="item.categoryID">
+          </el-option>
+        </el-select>
+      </el-col>
 
-    <el-col :span = "8">
-      <p>name like</p>
-      <el-input name="username"
-                type="text"
-                v-model="nameStr"
-                autoComplete="on"
-                placeholder="enter commodity name please">
-      </el-input>
-    </el-col>
+      <el-col :span = "8">
+        <p>name like</p>
+        <el-input name="username"
+                  type="text"
+                  v-model="nameStr"
+                  autoComplete="on"
+                  placeholder="enter commodity name please">
+        </el-input>
+      </el-col>
 
-    <el-col :span = "8">
-      <el-button @click="findCommodities">find products</el-button>
-    </el-col>
+      <el-col :span = "8">
+        <el-button @click="findCommodities">find such commodities</el-button>
+      </el-col>
 
-  </el-row>
+    </el-row>
+  </el-card>
 
-  <div>
+
+  <el-card shadow="always">
     <el-table
       :data="products"
       style="width: 100%">
@@ -62,7 +65,7 @@
         </template>
       </el-table-column>
     </el-table>
-  </div>
+  </el-card>
 
 </template>
 
@@ -119,5 +122,8 @@ export default {
 </script>
 
 <style scoped>
-
+.el-card{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 </style>

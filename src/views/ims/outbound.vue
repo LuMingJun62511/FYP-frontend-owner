@@ -1,63 +1,66 @@
 <template>
-  <div style="width: 1100px">
-    <el-table
-      :data="receipts"
-      style="width: 100%">
-      <el-table-column type="expand">
-        <template v-slot="props">
-          <el-row>
-            <el-col :span="8">product id</el-col>
-            <el-col :span="8">amount</el-col>
-            <el-col :span="8">total price</el-col>
-          </el-row>
-          <div v-for="item in props.row.items">
-            <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,242,201)">
-              <el-row>
-                <el-col :span="8">{{item.product_id}}</el-col>
-                <el-col :span="8">{{item.amount}}</el-col>
-                <el-col :span="8">{{item.total_price}}</el-col>
-              </el-row>
+  <el-card shadow="always">
+    <div style="width: 1100px">
+      <el-table
+        :data="receipts"
+        style="width: 100%">
+        <el-table-column type="expand">
+          <template v-slot="props">
+            <el-row>
+              <el-col :span="8">product id</el-col>
+              <el-col :span="8">amount</el-col>
+              <el-col :span="8">total price</el-col>
+            </el-row>
+            <div v-for="item in props.row.items">
+              <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,242,201)">
+                <el-row>
+                  <el-col :span="8">{{item.product_id}}</el-col>
+                  <el-col :span="8">{{item.amount}}</el-col>
+                  <el-col :span="8">{{item.total_price}}</el-col>
+                </el-row>
+              </div>
+              <div v-if="item.status === 0" class="not-lack-one">
+                <el-row>
+                  <el-col :span="8">{{item.product_id}}</el-col>
+                  <el-col :span="8">{{item.amount}}</el-col>
+                  <el-col :span="8">{{item.total_price}}</el-col>
+                </el-row>
+              </div>
             </div>
-            <div v-if="item.status === 0" class="not-lack-one">
-              <el-row>
-                <el-col :span="8">{{item.product_id}}</el-col>
-                <el-col :span="8">{{item.amount}}</el-col>
-                <el-col :span="8">{{item.total_price}}</el-col>
-              </el-row>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="receipt id"
-        prop="id"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="receiver_id"
-        prop="receiver.id"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="member_id"
-        prop="member.id"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="total_price"
-        prop="totalAmount"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="paid_amount"
-        prop="payAmount"
-        width="200">
-      </el-table-column>
-    </el-table>
-    <el-button @click="outboundAll">
-      outbound all
-    </el-button>
-  </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="receipt id"
+          prop="id"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="receiver_id"
+          prop="receiver.id"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="member_id"
+          prop="member.id"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="total_price"
+          prop="totalAmount"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="paid_amount"
+          prop="payAmount"
+          width="200">
+        </el-table-column>
+      </el-table>
+      <el-button @click="outboundAll">
+        outbound all
+      </el-button>
+    </div>
+  </el-card>
+
 </template>
 
 <script>

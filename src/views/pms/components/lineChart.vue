@@ -22,7 +22,7 @@ export default {
 
       chart.setOption({
         title: {
-          text: 'Sales of this product in the past 8 weeks'
+          text: 'Sale amount of this product in the past 8 weeks'
         },
         xAxis: {
           type: "category",
@@ -37,7 +37,7 @@ export default {
         series: [
           {
             name: 'sale amount',
-            data: chartData.map(item => item.sale),
+            data: chartData.map(item => item.amount),
             type: "line",
             smooth: true
           },

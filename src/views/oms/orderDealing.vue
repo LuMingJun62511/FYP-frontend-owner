@@ -1,261 +1,287 @@
 <template xmlns:el-col="http://www.w3.org/1999/html">
-  <p>Process this week's online shopping orders</p>
-  <el-steps :active="steps" finish-status="success">
-    <el-step title="Process all orders for this week"></el-step>
-    <el-step title="Process orders with problem manually"></el-step>
-    <el-step title="review all receipts"></el-step>
-  </el-steps>
-  <div class="container">
-    <div v-if="steps === 0">
-      <el-divider content-position="left">unhandled orders</el-divider>
-      <div style="width: 800px;">
-        <el-table
-          :data="unhandledOrders"
-          style="width: 100%">
-          <el-table-column type="expand">
-            <template v-slot="props">
-              <el-row >
-                <el-col :span="8">id</el-col>
-                <el-col :span="8">name</el-col>
-                <el-col :span="8">amount</el-col>
-              </el-row>
-              <div v-for="item in props.row.items">
-                <div v-if="item.lack === 1" class="lack-one" style="background-color: rgb(250,201,210)">
-                  <el-row>
-                    <el-col :span="8">{{item.product_id}}</el-col>
-                    <el-col :span="8">{{item.product_name}}</el-col>
-                    <el-col :span="8">{{item.amount}}</el-col>
+  <el-card shadow="always">
+    <p>Process this week's online shopping orders</p>
+    <el-card shadow="always">
+      <el-steps :active="steps" finish-status="success" align-center>
+        <el-step title="step 1" description="Process all orders for this week"></el-step>
+        <el-step title="step 2" description="Process orders with problem manually"></el-step>
+        <el-step title="step 3" description="Review all receipts"></el-step>
+      </el-steps>
+    </el-card>
+
+    <div class="container">
+      <div v-if="steps === 0">
+        <el-divider content-position="left">unhandled orders</el-divider>
+        <el-card shadow="always">
+          <div style="width: 800px;">
+            <el-table
+              :data="unhandledOrders"
+              style="width: 100%">
+              <el-table-column type="expand">
+                <template v-slot="props">
+                  <el-row >
+                    <el-col :span="8">id</el-col>
+                    <el-col :span="8">name</el-col>
+                    <el-col :span="8">amount</el-col>
                   </el-row>
-                </div>
-                <div v-if="item.lack === 0" class="not-lack-one">
-                  <el-row>
-                    <el-col :span="8">{{item.product_id}}</el-col>
-                    <el-col :span="8">{{item.product_name}}</el-col>
-                    <el-col :span="8">{{item.amount}}</el-col>
-                  </el-row>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="order id"
-            prop="id"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="status"
-            prop="status"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="payAmount"
-            prop="payAmount"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="notes"
-            prop="note"
-            width="200">
-          </el-table-column>
-        </el-table>
-      </div>
+                  <div v-for="item in props.row.items">
+                    <div v-if="item.lack === 1" class="lack-one" style="background-color: rgb(250,201,210)">
+                      <el-row>
+                        <el-col :span="8">{{item.product_id}}</el-col>
+                        <el-col :span="8">{{item.product_name}}</el-col>
+                        <el-col :span="8">{{item.amount}}</el-col>
+                      </el-row>
+                    </div>
+                    <div v-if="item.lack === 0" class="not-lack-one">
+                      <el-row>
+                        <el-col :span="8">{{item.product_id}}</el-col>
+                        <el-col :span="8">{{item.product_name}}</el-col>
+                        <el-col :span="8">{{item.amount}}</el-col>
+                      </el-row>
+                    </div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="order id"
+                prop="id"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="status"
+                prop="status"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="payAmount"
+                prop="payAmount"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="notes"
+                prop="note"
+                width="200">
+              </el-table-column>
+            </el-table>
+          </div>
+
+        </el-card>
+
+        <el-divider content-position="left">handled orders</el-divider>
+        <el-card shadow="always">
+          <div style="width: 800px;">
+            <el-table
+              :data="handledOrders"
+              style="width: 100%">
+              <el-table-column
+                label="order id"
+                prop="id"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="status"
+                prop="status"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="payAmount"
+                prop="payAmount"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="notes"
+                prop="note"
+                width="200">
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+
+<!--        <el-card shadow="never">-->
+          <el-button style="margin-top: 12px;" @click="autoHandleOrders">auto handling</el-button>
+          <el-button style="margin-top: 12px;" @click="finishAutoHandling">finish auto handling</el-button>
+<!--        </el-card>-->
 
 
-      <el-divider content-position="left">handled orders</el-divider>
-      <div style="width: 800px;">
-        <el-table
-          :data="handledOrders"
-          style="width: 100%">
-          <el-table-column
-            label="order id"
-            prop="id"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="status"
-            prop="status"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="payAmount"
-            prop="payAmount"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="notes"
-            prop="note"
-            width="200">
-          </el-table-column>
-        </el-table>
       </div>
-      <el-button style="margin-top: 12px;" @click="autoHandleOrders">auto handling</el-button>
-      <el-button style="margin-top: 12px;" @click="finishAutoHandling">finish auto handling</el-button>
-    </div>
 
-    <div v-if="steps === 1">
-      <div style="width: 800px">
-        <el-table
-          :data="unhandledOrders"
-          style="width: 100%">
-          <el-table-column type="expand">
-            <template v-slot="props">
-              <el-row>
-                <el-col :span="6">id</el-col>
-                <el-col :span="6">name</el-col>
-                <el-col :span="6">amount needed</el-col>
-                <el-col :span="6">operation</el-col>
-              </el-row>
-              <div v-for="item in props.row.items">
-                <div v-if="item.lack === 1" class="lack-one" style="background-color: rgb(250,201,210)">
+      <div v-if="steps === 1">
+        <el-card shadow="always">
+          <div style="width: 800px">
+            <el-table
+              :data="unhandledOrders"
+              style="width: 100%">
+              <el-table-column type="expand">
+                <template v-slot="props">
                   <el-row>
-                    <el-col :span="6">{{item.product_id}}</el-col>
-                    <el-col :span="6">{{item.product_name}}</el-col>
-                    <el-col :span="6">{{item.amount}}</el-col>
-                    <el-col :span="6">
-                      <el-button @click="chooseItemToHandle(props.row.id,item)">
-                        find alt for this
-                      </el-button>
-                    </el-col>
+                    <el-col :span="6">id</el-col>
+                    <el-col :span="6">name</el-col>
+                    <el-col :span="6">amount needed</el-col>
+                    <el-col :span="6">operation</el-col>
                   </el-row>
-                </div>
-                <div v-if="item.lack === 0" class="not-lack-one">
-                  <el-row>
-                    <el-col :span="6">{{item.product_id}}</el-col>
-                    <el-col :span="6">{{item.product_name}}</el-col>
-                    <el-col :span="6">{{item.amount}}</el-col>
-                  </el-row>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="order id"
-            prop="id"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="status"
-            prop="status"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="payAmount"
-            prop="payAmount"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="notes"
-            prop="note"
-            width="200">
-          </el-table-column>
-        </el-table>
-      </div>
-      <div v-if="tempOrderItem.product_id">
-        <el-row>
-          <el-col :span = "6">The item you are currently processing is</el-col>
-          <el-col :span = "6">total need</el-col>
-          <el-col :span = "6">currently available stock</el-col>
-          <el-col :span = "6">need at least</el-col>
-        </el-row>
-        <div v-if="tempLackedItemInStock.product_id">
-          <el-row>
-            <el-col :span = "6">{{tempOrderItem.product_name}}</el-col>
-            <el-col :span = "6">{{tempOrderItem.amount}}</el-col>
-            <el-col :span = "6">{{ tempLackedItemInStock.product_temp_stock }}</el-col>
-            <el-col :span = "6">{{ tempOrderItem.amount - tempLackedItemInStock.product_temp_stock - sumChosen }}</el-col>
-          </el-row>
-        </div>
-      </div>
-      <el-divider content-position="left">products can be chosen as alternatives</el-divider>
-      <div>
-        <el-row>
-          <el-col :span="6">id</el-col>
-          <el-col :span="6">name</el-col>
-          <el-col :span="6">amount left</el-col>
-          <el-col :span="6"> your choice</el-col>
-        </el-row>
-        <div v-for="(item,index) in tempSimilarProducts" :key="index">
+                  <div v-for="item in props.row.items">
+                    <div v-if="item.lack === 1" class="lack-one" style="background-color: rgb(250,201,210)">
+                      <el-row>
+                        <el-col :span="6">{{item.product_id}}</el-col>
+                        <el-col :span="6">{{item.product_name}}</el-col>
+                        <el-col :span="6">{{item.amount}}</el-col>
+                        <el-col :span="6">
+                          <el-button @click="chooseItemToHandle(props.row.id,item)">
+                            find alt for this
+                          </el-button>
+                        </el-col>
+                      </el-row>
+                    </div>
+                    <div v-if="item.lack === 0" class="not-lack-one">
+                      <el-row>
+                        <el-col :span="6">{{item.product_id}}</el-col>
+                        <el-col :span="6">{{item.product_name}}</el-col>
+                        <el-col :span="6">{{item.amount}}</el-col>
+                      </el-row>
+                    </div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="order id"
+                prop="id"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="status"
+                prop="status"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="payAmount"
+                prop="payAmount"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="notes"
+                prop="note"
+                width="200">
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+
+        <el-card shadow="always" style="height: 100px;">
+          <div>
             <el-row>
-              <el-col :span="6">{{item.product_id}}</el-col>
-              <el-col :span="6">{{item.product_name}}</el-col>
-              <el-col :span="6">{{item.product_temp_stock}}</el-col>
-              <el-col :span="6">
-                <el-input-number v-model="item.product_chosen" @change="handleChosen(index,item.product_chosen, item.product_temp_stock)" :min="0" :max="item.product_temp_stock"></el-input-number>
-              </el-col>
+              <el-col :span = "6">The item you are currently processing is</el-col>
+              <el-col :span = "6">total need</el-col>
+              <el-col :span = "6">currently available stock</el-col>
+              <el-col :span = "6">need at least</el-col>
             </el-row>
-        </div>
-        <el-button style="margin-top: 12px;" @click="manualHandlingThisOrder">finish fixing this order</el-button>
-      </div>
-      <el-button style="margin-top: 12px;" @click="finishManualHandling">finish manual handling</el-button>
-    </div>
-
-    <div v-if="steps === 2">
-      <div style="width: 1100px">
-        <el-table
-          :data="receipts"
-          style="width: 100%">
-          <el-table-column type="expand">
-            <template v-slot="props">
+            <div v-if="tempLackedItemInStock.product_id">
               <el-row>
-                <el-col :span="8">name</el-col>
-                <el-col :span="8">amount</el-col>
-                <el-col :span="8">total price</el-col>
+                <el-col :span = "6">{{tempOrderItem.product_name}}</el-col>
+                <el-col :span = "6">{{tempOrderItem.amount}}</el-col>
+                <el-col :span = "6">{{ tempLackedItemInStock.product_temp_stock }}</el-col>
+                <el-col :span = "6">{{ tempOrderItem.amount - tempLackedItemInStock.product_temp_stock - sumChosen }}</el-col>
               </el-row>
-              <div v-for="item in props.row.items">
-                <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,242,201)">
+            </div>
+          </div>
+        </el-card>
+
+        <el-divider content-position="left">products can be chosen as alternatives</el-divider>
+        <div>
+          <el-card shadow="always">
+            <el-row>
+              <el-col :span="6">id</el-col>
+              <el-col :span="6">name</el-col>
+              <el-col :span="6">amount left</el-col>
+              <el-col :span="6"> your choice</el-col>
+            </el-row>
+            <div v-for="(item,index) in tempSimilarProducts" :key="index">
+              <el-row>
+                <el-col :span="6">{{item.product_id}}</el-col>
+                <el-col :span="6">{{item.product_name}}</el-col>
+                <el-col :span="6">{{item.product_temp_stock}}</el-col>
+                <el-col :span="6">
+                  <el-input-number v-model="item.product_chosen" @change="handleChosen(index,item.product_chosen, item.product_temp_stock)" :min="0" :max="item.product_temp_stock"></el-input-number>
+                </el-col>
+              </el-row>
+            </div>
+          </el-card>
+          <el-button style="margin-top: 12px;" @click="manualHandlingThisOrder">finish fixing this order</el-button>
+        </div>
+        <el-button style="margin-top: 12px;" @click="finishManualHandling">finish manual handling</el-button>
+      </div>
+
+      <div v-if="steps === 2">
+        <el-card shadow="always">
+          <div style="width: 1100px">
+            <el-table
+              :data="receipts"
+              style="width: 100%">
+              <el-table-column type="expand">
+                <template v-slot="props">
                   <el-row>
-                    <el-col :span="8">{{item.product_name}}</el-col>
-                    <el-col :span="8">{{item.amount}}</el-col>
-                    <el-col :span="8">{{item.total_price}}</el-col>
+                    <el-col :span="8">name</el-col>
+                    <el-col :span="8">amount</el-col>
+                    <el-col :span="8">total price</el-col>
                   </el-row>
-                </div>
-                <div v-if="item.status === 0" class="not-lack-one">
-                  <el-row>
-                    <el-col :span="8">{{item.product_name}}</el-col>
-                    <el-col :span="8">{{item.amount}}</el-col>
-                    <el-col :span="8">{{item.total_price}}</el-col>
-                  </el-row>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="receipt id"
-            prop="id"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="receiver_id"
-            prop="receiver_id"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="member_id"
-            prop="member_id"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="total_amount"
-            prop="total_amount"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            label="operations"
-            prop="id">
-            <template v-slot="scope">
-              <el-button @click="abolishReceipt(scope.row.id)">
-                abolish this order and re-deal
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <p>You have processed all the orders, the next step is to outbound, do you want to outbound now? If you do, please click to jump to the outbound page</p>
-        <el-button @click="jumpToOutbound">
-          jump to outbound
-        </el-button>
+                  <div v-for="item in props.row.items">
+                    <div v-if="item.status === 1" class="changed-one" style="background-color: rgb(250,242,201)">
+                      <el-row>
+                        <el-col :span="8">{{item.product_name}}</el-col>
+                        <el-col :span="8">{{item.amount}}</el-col>
+                        <el-col :span="8">{{item.total_price}}</el-col>
+                      </el-row>
+                    </div>
+                    <div v-if="item.status === 0" class="not-lack-one">
+                      <el-row>
+                        <el-col :span="8">{{item.product_name}}</el-col>
+                        <el-col :span="8">{{item.amount}}</el-col>
+                        <el-col :span="8">{{item.total_price}}</el-col>
+                      </el-row>
+                    </div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="receipt id"
+                prop="id"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="receiver_id"
+                prop="receiver_id"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="member_id"
+                prop="member_id"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="total_amount"
+                prop="total_amount"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="operations"
+                prop="id">
+                <template v-slot="scope">
+                  <el-button @click="abolishReceipt(scope.row.id)">
+                    abolish this order and re-deal
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <p>You have processed all the orders, the next step is to outbound</p>
+            <p>If you want to outbound now, please click to jump to the outbound page</p>
+            <el-button @click="jumpToOutbound">
+              jump to outbound
+            </el-button>
+          </div>
+        </el-card>
       </div>
     </div>
-  </div>
+  </el-card>
+
 </template>
 
 <script>
@@ -658,5 +684,11 @@ export default {
 </script>
 
 <style scoped>
-
+.el-card {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /*display: flex;*/
+  /*justifyContent: center;*/
+  /*alignItems: center*/
+}
 </style>

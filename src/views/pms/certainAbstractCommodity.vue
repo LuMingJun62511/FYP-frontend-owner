@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col :span="8">
-      <div>
+      <el-card shadow="always">
         <el-form :model="product" v-if="!changing">
           <el-form-item label="id">
             <p>{{product.id}}</p>
@@ -28,7 +28,7 @@
             <p>{{product.sale}}</p>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="startChanging">开始创建</el-button>
+            <el-button type="primary" @click="startChanging">change some data</el-button>
           </el-form-item>
         </el-form>
         <el-form :model="product" v-if="changing">
@@ -64,10 +64,10 @@
             <p>{{product.sale}}</p>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="finishChanging">结束创建</el-button>
+            <el-button type="primary" @click="finishChanging">finish changing</el-button>
           </el-form-item>
         </el-form>
-      </div>
+      </el-card>
     </el-col>
     <el-col :span="16">
       <div>
@@ -79,29 +79,31 @@
   </el-row>
 
 
+  <el-card shadow="always" align-center>
+    <p>Batches Information</p>
+    <div style="width: 600px;" align-center>
+      <el-table
+        :data="batches"
+        style="width: 100%">
+        <el-table-column
+          label="id"
+          prop="id"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="amount"
+          prop="amount"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="bbd"
+          prop="BBD"
+          width="200">
+        </el-table-column>
+      </el-table>
+    </div>
+  </el-card>
 
-  <p>然后是批次信息，各个批次的信息体现一下</p>
-  <div style="width: 600px;">
-    <el-table
-      :data="batches"
-      style="width: 100%">
-      <el-table-column
-        label="id"
-        prop="id"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="amount"
-        prop="amount"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="bbd"
-        prop="BBD"
-        width="200">
-      </el-table-column>
-    </el-table>
-  </div>
 
 </template>
 
@@ -144,8 +146,9 @@ export default {
       this.changing = true;
     },
     finishChanging(){
-      // 这里其实是三步走，1，提交数据 2，查数据 3改状态
+      // 这里其实是三步走，1，提交数据 2，查数据 3，更新一下子
       this.changing = false;
+    //   这个提交数据还没做，写上去
     }
   },
   created () {

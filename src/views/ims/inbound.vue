@@ -1,69 +1,72 @@
 <template>
-  <p>Here are the receipts with items to return</p>
-  <div style="width: 1100px">
-    <el-table
-      :data="receipts"
-      style="width: 100%">
-      <el-table-column type="expand">
-        <template v-slot="props">
-          <el-row>
-            <el-col :span="6">product id</el-col>
-            <el-col :span="6">amount</el-col>
-            <el-col :span="6">total price</el-col>
-            <el-col :span="6">operation</el-col>
-          </el-row>
-          <div v-for="item in props.row.items">
-            <div v-if="item.status === 2" class="to-return" style="background-color: rgb(250,242,201)">
-              <el-row>
-                <el-col :span="6">{{item.product_id}}</el-col>
-                <el-col :span="6">{{item.amount}}</el-col>
-                <el-col :span="6">{{item.total_price}}</el-col>
-                <el-col :span="6">
-                  <el-button @click="chooseItemToReturn(item)">check this one</el-button>
-                </el-col>
-              </el-row>
+  <el-card shadow="always">
+    <p>Here are the receipts with items to return</p>
+    <div style="width: 1100px">
+      <el-table
+        :data="receipts"
+        style="width: 100%">
+        <el-table-column type="expand">
+          <template v-slot="props">
+            <el-row>
+              <el-col :span="6">product id</el-col>
+              <el-col :span="6">amount</el-col>
+              <el-col :span="6">total price</el-col>
+              <el-col :span="6">operation</el-col>
+            </el-row>
+            <div v-for="item in props.row.items">
+              <div v-if="item.status === 2" class="to-return" style="background-color: rgb(250,242,201)">
+                <el-row>
+                  <el-col :span="6">{{item.product_id}}</el-col>
+                  <el-col :span="6">{{item.amount}}</el-col>
+                  <el-col :span="6">{{item.total_price}}</el-col>
+                  <el-col :span="6">
+                    <el-button @click="chooseItemToReturn(item)">check this one</el-button>
+                  </el-col>
+                </el-row>
+              </div>
+              <div v-if="item.status === 0 || item.status === 1" class="not-to-return">
+                <el-row>
+                  <el-col :span="6">{{item.product_id}}</el-col>
+                  <el-col :span="6">{{item.amount}}</el-col>
+                  <el-col :span="6">{{item.total_price}}</el-col>
+                  <el-col :span="6">no operation</el-col>
+                </el-row>
+              </div>
             </div>
-            <div v-if="item.status === 0 || item.status === 1" class="not-to-return">
-              <el-row>
-                <el-col :span="6">{{item.product_id}}</el-col>
-                <el-col :span="6">{{item.amount}}</el-col>
-                <el-col :span="6">{{item.total_price}}</el-col>
-                <el-col :span="6">no operation</el-col>
-              </el-row>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="receipt id"
-        prop="id"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="receiver_id"
-        prop="receiver.id"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="member_id"
-        prop="member.id"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="total_price"
-        prop="totalAmount"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        label="paid_amount"
-        prop="payAmount"
-        width="200">
-      </el-table-column>
-    </el-table>
-  </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="receipt id"
+          prop="id"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="receiver_id"
+          prop="receiver.id"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="member_id"
+          prop="member.id"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="total_price"
+          prop="totalAmount"
+          width="200">
+        </el-table-column>
+        <el-table-column
+          label="paid_amount"
+          prop="payAmount"
+          width="200">
+        </el-table-column>
+      </el-table>
+    </div>
+  </el-card>
+<!--  <el-card shadow="always"></el-card>-->
   <el-row>
     <el-col :span="8">
-      <div>
+      <el-card shadow="always">
         <p>to return items</p>
         <el-form :data="itemToReturn">
           <el-form-item label="which product">
@@ -76,32 +79,38 @@
             <p>{{itemToReturn.amount}}</p>
           </el-form-item>
         </el-form>
-      </div>
+      </el-card>
     </el-col>
     <el-col :span="8">
-      <p>product Info</p>
-      <el-form :data="productInfo">
-        <el-form-item label="product name">
-          <p>{{productInfo.name}}</p>
-        </el-form-item>
-        <el-form-item label="how many left">
-          <p>{{productInfo.stock}}</p>
-        </el-form-item>
-        <el-form-item label="single price">
-          <p>{{productInfo.price}}</p>
-        </el-form-item>
-      </el-form>
+      <el-card shadow="always">
+        <p>product Info</p>
+        <el-form :data="productInfo">
+          <el-form-item label="product name">
+            <p>{{productInfo.name}}</p>
+          </el-form-item>
+          <el-form-item label="how many left">
+            <p>{{productInfo.stock}}</p>
+          </el-form-item>
+          <el-form-item label="single price">
+            <p>{{productInfo.price}}</p>
+          </el-form-item>
+        </el-form>
+      </el-card>
+
     </el-col>
     <el-col :span="8">
-      <p>batch Info</p>
-      <el-form :data="batchInfo">
-        <el-form-item label="how many left">
-          <p>{{batchInfo.amount}}</p>
-        </el-form-item>
-        <el-form-item label="BBD">
-          <p>{{batchInfo.bbd}}</p>
-        </el-form-item>
-      </el-form>
+      <el-card shadow="always">
+        <p>batch Info</p>
+        <el-form :data="batchInfo">
+          <el-form-item label="how many left">
+            <p>{{batchInfo.amount}}</p>
+          </el-form-item>
+          <el-form-item label="BBD">
+            <p>{{batchInfo.bbd}}</p>
+          </el-form-item>
+        </el-form>
+      </el-card>
+
     </el-col>
   </el-row>
 
@@ -210,5 +219,8 @@ export default {
 </script>
 
 <style scoped>
-
+.el-card {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 </style>

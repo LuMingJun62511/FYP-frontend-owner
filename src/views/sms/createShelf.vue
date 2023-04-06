@@ -1,32 +1,57 @@
 <template>
   <p>create a new shelf</p>
-  <el-form :data="newShelf">
-    <el-form-item label="id">
-      <el-input v-model="newShelf.id"></el-input>
-    </el-form-item>
-    <el-form-item label="category">
-      <el-select v-model="newShelf.categoryId" placeholder="please choose a category">
-        <el-option
-          v-for="item in options"
-          :key="item.categoryID"
-          :label="item.label"
-          :value="item.categoryID">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="row number">
-      <el-input v-model="newShelf.rowNum"></el-input>
-    </el-form-item>
-    <el-form-item label="column number">
-      <el-input v-model="newShelf.colNum"></el-input>
-    </el-form-item>
-    <el-form-item label="note">
-      <el-input v-model="newShelf.note"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="createShelf">结束创建</el-button>
-    </el-form-item>
-  </el-form>
+  <el-row>
+    <el-col :span="6"></el-col>
+    <el-col :span="12">
+      <el-card shadow="always">
+        <el-row>
+          <el-col :span="8"> id </el-col>
+          <el-col :span="16">
+            <el-input v-model="newShelf.id"></el-input>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8"> category </el-col>
+          <el-col :span="16">
+            <el-select v-model="newShelf.categoryId" placeholder="please choose a category">
+              <el-option
+                v-for="item in options"
+                :key="item.categoryID"
+                :label="item.label"
+                :value="item.categoryID">
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8"> row number </el-col>
+          <el-col :span="16">
+            <el-input v-model="newShelf.rowNum"></el-input>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8"> column number </el-col>
+          <el-col :span="16">
+            <el-input v-model="newShelf.colNum"></el-input>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8"> note </el-col>
+          <el-col :span="16">
+            <el-input v-model="newShelf.note"></el-input>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-button type="primary" @click="createShelf">create a shelf</el-button>
+          </el-col>
+        </el-row>
+
+      </el-card>
+    </el-col>
+    <el-col :span="6"></el-col>
+  </el-row>
+
 </template>
 
 <script>
@@ -82,5 +107,8 @@ export default {
 </script>
 
 <style scoped>
-
+.el-row {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 </style>
