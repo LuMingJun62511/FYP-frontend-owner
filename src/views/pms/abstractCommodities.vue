@@ -94,11 +94,11 @@ export default {
   methods:{
     findCommodities(){
       if(this.nameStr === ''){//如果用户没写，那不能瞎找
-        axios.get('http://localhost:8080/api/pms/productsByCategory/'+this.categoryID).then(response => {
+        axios.get(process.env.VUE_APP_BASE_URL+'/pms/productsByCategory/'+this.categoryID).then(response => {
           this.products = response.data
         })
       }else {
-        axios.get('http://localhost:8080/api/pms/productsByCategoryAndNameLike/'+this.categoryID+'/'+this.nameStr).then(response => {
+        axios.get(process.env.VUE_APP_BASE_URL+'/pms/productsByCategoryAndNameLike/'+this.categoryID+'/'+this.nameStr).then(response => {
           this.products = response.data
         })
       }
@@ -108,7 +108,7 @@ export default {
     }
   },
   created () {
-    axios.get('http://localhost:8080/api/pms/findCategories').then(response => {
+    axios.get(process.env.VUE_APP_BASE_URL+'/pms/findCategories').then(response => {
       this.options = []
       response.data.forEach(category =>{
         this.options.push({

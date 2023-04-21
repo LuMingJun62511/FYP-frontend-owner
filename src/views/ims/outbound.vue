@@ -82,11 +82,11 @@ export default {
         queryList.push(receipt.id)
       })
       //1,把product修改，同时把统计数据修改一下
-      axios.post('http://localhost:8080/api/pms/updateProductStock').then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/pms/updateProductStock').then(response => {
         console.log(response.status)
       })
       //2,把receipts 状态修改一下
-      axios.post('http://localhost:8080/api/oms/updateReceiptStatus',queryList).then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/oms/updateReceiptStatus',queryList).then(response => {
         console.log(response.status)
       })
     }
@@ -94,13 +94,13 @@ export default {
 
   async created () {
   //  查receipt
-    await axios.get('http://localhost:8080/api/ims/notFinishedReceipts').then(response => {
+    await axios.get(process.env.VUE_APP_BASE_URL+'/ims/notFinishedReceipts').then(response => {
       this.receipts = response.data
     })
 
     await console.log(this.receipts)
     await this.receipts.forEach(receipt =>{
-      axios.get('http://localhost:8080/api/ims/receiptItemsByReceiptId/'+receipt.id).then(response => {
+      axios.get(process.env.VUE_APP_BASE_URL+'/ims/receiptItemsByReceiptId/'+receipt.id).then(response => {
         let receiptItems = []
         response.data.forEach(item=>{
           receiptItems.push({

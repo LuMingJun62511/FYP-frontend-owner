@@ -38,8 +38,8 @@ export default {
     }
   },
   created () {
-    axios.get('http://localhost:8080/api/oms/orderItems/'+this.orderID).then(response => {
-      this.orders = response.data
+    axios.get(process.env.VUE_APP_BASE_URL+'/oms/orderItems/'+this.orderID).then(response => {
+      this.orderItems = response.data
       // console.log(this.orders)
     })
   }

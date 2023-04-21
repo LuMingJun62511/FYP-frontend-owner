@@ -184,16 +184,16 @@ export default {
   async created () {
     const _this = this
     _this.shelfID = this.$route.params.id
-    await axios.get('http://localhost:8080/api/sms/shelfBasicInfo/'+_this.shelfID).then(function (res) {
+    await axios.get(process.env.VUE_APP_BASE_URL+'/sms/shelfBasicInfo/'+_this.shelfID).then(function (res) {
       _this.rowNum = res.data.rowNum
       _this.colNum = res.data.colNum
       _this.categoryId = res.data.categoryId
     })
-    await axios.get('http://localhost:8080/api/sms/getItems/'+_this.shelfID).then(function (res) {
+    await axios.get(process.env.VUE_APP_BASE_URL+'/sms/getItems/'+_this.shelfID).then(function (res) {
       _this.fromExist = _this.startTrimUpper(res.data,_this.rowNum)
     })
 
-    await axios.get('http://localhost:8080/api/pms/productsByCategory/'+_this.categoryId).then(function (res) {
+    await axios.get(process.env.VUE_APP_BASE_URL+'/pms/productsByCategory/'+_this.categoryId).then(function (res) {
       _this.fromDatabase = _this.startTrimLower(res.data)
     })
 
@@ -336,7 +336,7 @@ export default {
           )
         }
       }
-      axios.post('http://localhost:8080/api/sms/itemsSaving',updatedData).then(function (res) {
+      axios.post(process.env.VUE_APP_BASE_URL+'/sms/itemsSaving',updatedData).then(function (res) {
         console.log(res.status)
       })
     },
@@ -354,7 +354,7 @@ export default {
         }
       }
       // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
-      axios.post('http://localhost:8080/api/sms/sortByCreated/'+shelfID+'/'+colNum,Data).then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/sms/sortByCreated/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
       })
     },
@@ -371,7 +371,7 @@ export default {
           })
         }
       }
-      axios.post('http://localhost:8080/api/sms/sortBySales/'+shelfID+'/'+colNum,Data).then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/sms/sortBySales/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
       })
     },
@@ -389,25 +389,26 @@ export default {
         }
       }
       // 把所有数据传上去，然后根据传上来的数据去查，batch,把最近的batch安上，然后把这个排序的传过来，传的时候还得加shelf，的信息
-      axios.post('http://localhost:8080/api/sms/sortByBBD/'+shelfID+'/'+colNum,Data).then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/sms/sortByBBD/'+shelfID+'/'+colNum,Data).then(response => {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
       })
     },
     autoFindByCreated(){
-      const categoryID = this.categoryID
-      axios.get('http://localhost:8080/api/pms/findProductsByCreated/'+categoryID).then(response => {
+      // 三个原为const categoryID = this.categoryID
+      const categoryID = this.categoryId
+      axios.get(process.env.VUE_APP_BASE_URL+'/pms/findProductsByCreated/'+categoryID).then(response => {
         this.fromDatabase = this.startTrimLower(response.data)
       })
     },
     autoFindBySale(){
-      const categoryID = this.categoryID
-      axios.get('http://localhost:8080/api/pms/findProductsBySale/'+categoryID).then(response => {
+      const categoryID = this.categoryId
+      axios.get(process.env.VUE_APP_BASE_URL+'/pms/findProductsBySale/'+categoryID).then(response => {
         this.fromDatabase = this.startTrimLower(response.data)
       })
     },
     autoFindByBBD(){
-      const categoryID = this.categoryID
-      axios.get('http://localhost:8080/api/pms/findProductsByBBD/'+categoryID).then(response => {
+      const categoryID = this.categoryId
+      axios.get(process.env.VUE_APP_BASE_URL+'/pms/findProductsByBBD/'+categoryID).then(response => {
         this.fromDatabase = this.startTrimLower(response.data)
       })
     },

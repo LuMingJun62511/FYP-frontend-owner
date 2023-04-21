@@ -52,7 +52,7 @@ export default {
 
     onMounted(async () => {
       // 使用axios获取数据
-      const response = await axios.get('http://localhost:8080/api/pms/productDataForChart/'+props.productID);
+      const response = await axios.get(process.env.VUE_APP_BASE_URL+'/pms/productDataForChart/'+props.productID);
       chartData = response.data;
       initChart();
     });

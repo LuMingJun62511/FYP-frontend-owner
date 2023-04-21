@@ -408,7 +408,7 @@ export default {
     },
 
     findSimilarProducts(item){
-      axios.get('http://localhost:8080/api/pms/productsOfSimilarCategory/'+item.product_id).then(response => {
+      axios.get(process.env.VUE_APP_BASE_URL+'/pms/productsOfSimilarCategory/'+item.product_id).then(response => {
         response.data.forEach(p =>{
           this.tempSimilarProducts.push({
             product_id:p.id,
@@ -545,7 +545,7 @@ export default {
           status: receipt.status
         })
       })
-      await axios.post('http://localhost:8080/api/oms/receiptsSaving', res).then(response => {
+      await axios.post(process.env.VUE_APP_BASE_URL+'/oms/receiptsSaving', res).then(response => {
         console.log(response.status)
       })
     },
@@ -573,7 +573,7 @@ export default {
           status:receiptItem.status
         })
       })
-      axios.post('http://localhost:8080/api/oms/receiptItemsSaving',res).then(response =>{
+      axios.post(process.env.VUE_APP_BASE_URL+'/oms/receiptItemsSaving',res).then(response =>{
         console.log(response.status)
       })
     },
@@ -584,7 +584,7 @@ export default {
         res.push(ho.id)
       })
       // 把id发回去，凡是有这个id的，都把status更新了
-      axios.post('http://localhost:8080/api/oms/updateOrderStatus',res).then(response =>{
+      axios.post(process.env.VUE_APP_BASE_URL+'/oms/updateOrderStatus',res).then(response =>{
         console.log(response.status)
       })
       //主要是把没处理的这些标识为处理过的

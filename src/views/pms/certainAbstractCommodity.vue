@@ -154,7 +154,7 @@ export default {
   created () {
     this.product.id = this.$route.params.id
 
-    axios.get('http://localhost:8080/api/pms/findCategories').then(response => {
+    axios.get(process.env.VUE_APP_BASE_URL+'/pms/findCategories').then(response => {
       this.options = []
       response.data.forEach(category =>{
         this.options.push({
@@ -164,7 +164,7 @@ export default {
       })
     })
 
-    axios.get('http://localhost:8080/api/pms/productByID/'+this.product.id).then(response => {
+    axios.get(process.env.VUE_APP_BASE_URL+'/pms/productByID/'+this.product.id).then(response => {
       this.product.name = response.data.name
       this.product.category_id = response.data.category.id
       this.product.category_name = response.data.category.name
@@ -175,7 +175,7 @@ export default {
       this.product.sale = response.data.sale
     })
 
-    axios.get('http://localhost:8080/api/pms/findBatches/'+this.product.id).then(response => {
+    axios.get(process.env.VUE_APP_BASE_URL+'/pms/findBatches/'+this.product.id).then(response => {
       const regex = /^(\d{4}-\d{2}-\d{2})/
       response.data.forEach(batch =>{
         const datePart = batch.bbd.match(regex)[1];

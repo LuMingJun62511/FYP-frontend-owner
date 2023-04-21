@@ -57,7 +57,7 @@ export default {
 
     onMounted(async () => {
       // 使用axios获取数据
-      const response = await axios.get('http://localhost:8080/api/home/orderDataForChart');
+      const response = await axios.get(process.env.VUE_APP_BASE_URL+'/home/orderDataForChart');
       chartData = response.data;
       initChart();
     });

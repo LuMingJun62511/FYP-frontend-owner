@@ -151,11 +151,11 @@ export default {
       this.itemToReturn.batch_id=item.batch_id
       this.itemToReturn.total_price=item.totalPrice
       this.itemToReturn.amount=item.amount
-      axios.get('http://localhost:8080/api/ims/productInfo/'+item.product_id).then(response => {
+      axios.get(process.env.VUE_APP_BASE_URL+'/ims/productInfo/'+item.product_id).then(response => {
         this.productInfo = response.data
         console.log(this.productInfo)
       })
-      axios.get('http://localhost:8080/api/ims/batchInfo/'+item.batch_id).then(response => {
+      axios.get(process.env.VUE_APP_BASE_URL+'/ims/batchInfo/'+item.batch_id).then(response => {
         this.batchInfo = response.data
         console.log(this.batchInfo)
       })
@@ -169,36 +169,36 @@ export default {
     },
 
     updateBatch(batchId,amount){
-      axios.post('http://localhost:8080/api/ims/updateBatch/'+batchId+'/'+amount).then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/ims/updateBatch/'+batchId+'/'+amount).then(response => {
         console.log(response.status)
       })
     },
 
     updateProduct(productId,amount){
-      axios.post('http://localhost:8080/api/ims/updateProduct/'+productId+'/'+amount).then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/ims/updateProduct/'+productId+'/'+amount).then(response => {
         console.log(response.status)
       })
     },
 
     updateReceiptItem(receiptId,productId,batchId,amount){
-      axios.post('http://localhost:8080/api/ims/updateReceiptItems/'+amount,{receiptId,productId,batchId}).then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/ims/updateReceiptItems/'+amount,{receiptId,productId,batchId}).then(response => {
         console.log(response.status)
       })
     },
 
     updateReceipt(receiptId){
-      axios.post('http://localhost:8080/api/ims/updateReceipt/'+ receiptId).then(response => {
+      axios.post(process.env.VUE_APP_BASE_URL+'/ims/updateReceipt/'+ receiptId).then(response => {
         console.log(response.status)
       })
     },
   },
 
   async created () {
-    await axios.get('http://localhost:8080/api/ims/toReturnReceipts').then(response => {//还没实现，就是取status为2的receipt,
+    await axios.get(process.env.VUE_APP_BASE_URL+'/ims/toReturnReceipts').then(response => {//还没实现，就是取status为2的receipt,
       this.receipts = response.data
     })
     await this.receipts.forEach(receipt=>{
-      axios.get('http://localhost:8080/api/ims/receiptItemsByReceiptId/'+receipt.id).then(response => {
+      axios.get(process.env.VUE_APP_BASE_URL+'/ims/receiptItemsByReceiptId/'+receipt.id).then(response => {
         let receiptItems = []
         response.data.forEach(item=>{
           receiptItems.push({

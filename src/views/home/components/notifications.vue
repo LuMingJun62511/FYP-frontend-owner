@@ -62,10 +62,10 @@ export default {
   },
   async created () {
     //然后这里首先调用查询函数，在后端查一下有没有问题，
-    await axios.get('http://localhost:8080/api/home/checkProducts').then(response => {
+    await axios.get(process.env.VUE_APP_BASE_URL+'/home/checkProducts').then(response => {
 
     })
-    await axios.get('http://localhost:8080/api/home/getProducts').then(response => {
+    await axios.get(process.env.VUE_APP_BASE_URL+'/home/getProducts').then(response => {
       this.lowStock = []
       this.urgent = []
 

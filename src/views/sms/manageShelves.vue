@@ -49,7 +49,7 @@ export default {
   },
   created () {
     const _this = this
-    axios.get('http://localhost:8080/api/sms/shelves').then(function (res) {
+    axios.get(process.env.VUE_APP_BASE_URL+'/sms/shelves').then(function (res) {
       _this.shelves = res.data
     })
   },

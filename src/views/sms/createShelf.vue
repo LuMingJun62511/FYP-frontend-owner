@@ -78,11 +78,11 @@ export default {
   methods:{
     //新创建的shelf还得自动填充一下，
     async createShelf(){
-      await axios.post('http://localhost:8080/api/sms/createOneShelf',this.newShelf).then(response =>{
+      await axios.post(process.env.VUE_APP_BASE_URL+'/sms/createOneShelf',this.newShelf).then(response =>{
         console.log(response.status)
       })
 
-      await axios.post('http://localhost:8080/api/sms/autoFillShelf/',this.newShelf).then(response =>{
+      await axios.post(process.env.VUE_APP_BASE_URL+'/sms/autoFillShelf/',this.newShelf).then(response =>{
         console.log(response.status)
       })
       await this.handleJump(this.newShelf.id)
@@ -93,7 +93,7 @@ export default {
     }
   },
   created () {
-    axios.get('http://localhost:8080/api/pms/findCategories').then(response => {
+    axios.get(process.env.VUE_APP_BASE_URL+'/pms/findCategories').then(response => {
       this.options = []
       response.data.forEach(category =>{
         this.options.push({
