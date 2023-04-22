@@ -645,7 +645,7 @@ export default {
 
   async created () {
     //   第一步，查订单
-    await axios.get('http://localhost:8080/api/oms/ordersThisWeek').then(response => {
+    await axios.get(process.env.VUE_APP_BASE_URL+'/oms/ordersThisWeek').then(response => {
       response.data.forEach(element =>{
         if(element.status === 1){
           this.handledOrders.push(element)
@@ -657,7 +657,7 @@ export default {
     })
     //   第二,三步，查物品及库存
     await this.unhandledOrders.forEach(order =>{
-      axios.get('http://localhost:8080/api/oms/orderItems/'+order.id).then(response => {
+      axios.get(process.env.VUE_APP_BASE_URL+'/oms/orderItems/'+order.id).then(response => {
         let tempOrderItems = []
         response.data.forEach(item=>{
           tempOrderItems.push({

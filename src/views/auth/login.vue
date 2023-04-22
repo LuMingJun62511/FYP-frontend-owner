@@ -100,14 +100,14 @@ export default {
     handleLogin (loginForm) {
       const store = this.$store
       if(this.userType){//store owner
-        axios.post('http://localhost:8080/ownerLogin',loginForm).then(response => {
+        axios.post(process.env.VUE_APP_BASE_URL+'/ownerLogin',loginForm).then(response => {
           if(response.data){
             store.commit('SET_LOGIN',response.data)
             this.$router.push('/')
           }
         })
       }else {//admin store owner
-        axios.post('http://localhost:8080/adminLogin',loginForm).then(response => {
+        axios.post(process.env.VUE_APP_BASE_URL+'/adminLogin',loginForm).then(response => {
           if(response.data){
             store.commit('SET_LOGIN',response.data)
             this.$router.push('/')

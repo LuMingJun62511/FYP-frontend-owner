@@ -103,7 +103,7 @@ export default {
   },
   methods:{
     handleSignup (signUpForm) {
-      axios.post('http://localhost:8080/signup',signUpForm).then(function (res) {
+      axios.post(process.env.VUE_APP_BASE_URL+'/signup',signUpForm).then(function (res) {
 
       })
     },
