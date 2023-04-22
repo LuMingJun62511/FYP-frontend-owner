@@ -1,7 +1,7 @@
 <template>
   <el-card class="card">
     <div ondragstart="return false">
-      <img :src="require('@/assets/images/' + imgUrl + '')" class="image" alt="@/assets/images/image-not-found-icon.png" >
+      <img :src="require('@/assets/images/' + imgUrl + '.jpg')" class="image" alt="@/assets/images/image-not-found-icon.png" >
     </div>
     <el-row align="middle">
       <el-col v-if="checkNew(createdTime)" :span = "6">
@@ -59,7 +59,7 @@ export default {
   border-width:1px;
 }
 .image{
-  max-height: 80px;
-  max-width: 80px;
+  height: 80px;
+  width: 80px;
 }
 </style>

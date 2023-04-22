@@ -40,7 +40,7 @@
               :drop-placeholder="dropPlaceholderOptions"
             >
               <Draggable v-for="card in column.children" :key="card.id">
-                <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :sale = card.sale :createdTime = card.createdTime ></CommodityCard>
+                <CommodityCard :imgUrl = card.imgUrl :name = card.name :isUrgent = card.isUrgent :sale = card.sale :createdTime = card.createdTime ></CommodityCard>
               </Draggable>
             </Container>
           </div>
@@ -67,7 +67,7 @@
                 :drop-placeholder="dropPlaceholderOptions"
               >
                 <Draggable v-for="card in column.children" :key="card.id">
-                  <CommodityCard :imgUrl = testUrl :name = card.name :isUrgent = card.isUrgent :sale = card.sale :createdTime = card.createdTime ></CommodityCard>
+                  <CommodityCard :imgUrl = card.imgUrl :name = card.name :isUrgent = card.isUrgent :sale = card.sale :createdTime = card.createdTime ></CommodityCard>
                 </Draggable>
               </Container>
             </div>
@@ -214,7 +214,8 @@ export default {
             name: temp[i*colNum+j].abstractProduct.name,
             isUrgent: temp[i*colNum+j].abstractProduct.isUrgent,
             sale: temp[i*colNum+j].abstractProduct.sale,
-            createdTime:temp[i*colNum+j].abstractProduct.createdTime
+            createdTime:temp[i*colNum+j].abstractProduct.createdTime,
+            imgUrl:temp[i*colNum+j].abstractProduct.pic
           })
         }
       }
@@ -225,7 +226,8 @@ export default {
           name: temp[i].abstractProduct.name,
           isUrgent: temp[i].abstractProduct.isUrgent,
           sale: temp[i].abstractProduct.sale,
-          createdTime: temp[i].abstractProduct.createdTime
+          createdTime: temp[i].abstractProduct.createdTime,
+          imgUrl:temp[i].abstractProduct.pic
         })
       }
       return newScene
@@ -242,7 +244,8 @@ export default {
           name: temp[i].abstractProduct.name,
           isUrgent: temp[i].abstractProduct.isUrgent,
           sale: temp[i].abstractProduct.sale,
-          createdTime:temp[i].abstractProduct.createdTime
+          createdTime:temp[i].abstractProduct.createdTime,
+          imgUrl:temp[i].abstractProduct.pic
         })
       }
       for (let i=0; i<rowNum; i++ ){
@@ -259,7 +262,8 @@ export default {
           name: temp[i].name,
           isUrgent: temp[i].isUrgent,
           sale: temp[i].sale,
-          createdTime:temp[i].createdTime
+          createdTime:temp[i].createdTime,
+          imgUrl:temp[i].pic
         })
       }
       return newScene
