@@ -24,7 +24,8 @@
       </el-col>
 
       <el-col :span = "8">
-        <el-button @click="findCommodities">find such commodities</el-button>
+        <p>find such commodities</p>
+        <el-button @click="findCommodities">search</el-button>
       </el-col>
 
     </el-row>

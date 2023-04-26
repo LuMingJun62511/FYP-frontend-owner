@@ -81,6 +81,7 @@ export default {
       this.receipts.forEach(receipt =>{
         queryList.push(receipt.id)
       })
+      this.receipts = []
       //1,把product修改，同时把统计数据修改一下
       axios.post(process.env.VUE_APP_BASE_URL+'/pms/updateProductStock').then(response => {
         console.log(response.status)

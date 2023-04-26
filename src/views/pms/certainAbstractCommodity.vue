@@ -1,7 +1,13 @@
 <template>
+  <el-card v-if="product.is_urgent === 1" style="background-color: rgb(250,242,201); width: 75%; margin-left: auto; margin-right: auto; margin-bottom: 20px" >
+  <p>Please note that there are batches of this commodity near their bbd </p>
+</el-card>
+  <el-card v-if="product.is_low === 1" style="background-color: rgb(250,201,210); width: 75%; margin-left: auto; margin-right: auto; margin-bottom: 20px" >
+    <p>Please note that the stock of this commodity is low </p>
+  </el-card>
   <el-row>
     <el-col :span="8">
-      <el-card shadow="always">
+      <el-card shadow="always" style="height: 500px">
         <el-form :model="product" v-if="!changing">
           <el-form-item label="id">
             <p>{{product.id}}</p>
@@ -70,39 +76,40 @@
       </el-card>
     </el-col>
     <el-col :span="16">
-      <div>
-        <p>chart here</p>
-        <echarts-box2 :productID = this.product.id></echarts-box2>
+      <div style="margin-left: 10px; height: 600px">
+<!--        <p>chart here</p>-->
+        <echarts-box2 :productID = this.product.id style="height: 300px"></echarts-box2>
+        <el-card shadow="always" align-center style="height: 190px; margin-top: 10px ">
+          <p>Batches Information</p>
+          <div style="width: 600px;" align-center>
+            <el-table
+              :data="batches"
+              style="width: 100%">
+              <el-table-column
+                label="id"
+                prop="id"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="amount"
+                prop="amount"
+                width="200">
+              </el-table-column>
+              <el-table-column
+                label="bbd"
+                prop="BBD"
+                width="200">
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
 <!--        这里一个问题，怎么往这个组件里传productID，解决了，图就画好了-->
       </div>
     </el-col>
   </el-row>
 
 
-  <el-card shadow="always" align-center>
-    <p>Batches Information</p>
-    <div style="width: 600px;" align-center>
-      <el-table
-        :data="batches"
-        style="width: 100%">
-        <el-table-column
-          label="id"
-          prop="id"
-          width="200">
-        </el-table-column>
-        <el-table-column
-          label="amount"
-          prop="amount"
-          width="200">
-        </el-table-column>
-        <el-table-column
-          label="bbd"
-          prop="BBD"
-          width="200">
-        </el-table-column>
-      </el-table>
-    </div>
-  </el-card>
+
 
 
 </template>
@@ -173,6 +180,8 @@ export default {
       this.product.low_stock = response.data.lowStock
       this.product.to_be_outbound = response.data.toBeOutbound
       this.product.sale = response.data.sale
+      this.product.is_low = response.data.isLow
+      this.product.is_urgent = response.data.isUrgent
     })
 
     axios.get(process.env.VUE_APP_BASE_URL+'/pms/findBatches/'+this.product.id).then(response => {
