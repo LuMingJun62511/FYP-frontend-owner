@@ -130,7 +130,7 @@
           <el-button @click="saveShelf">save this shelf</el-button>
         </el-col>
         <el-col :span="9">
-          <el-button @click="deleteShelf">delete this shelf</el-button>
+          <el-button type="danger" @click="deleteShelf">delete this shelf</el-button>
         </el-col>
       </el-row>
     </div>
@@ -414,6 +414,14 @@ export default {
       const categoryID = this.categoryId
       axios.get(process.env.VUE_APP_BASE_URL+'/pms/findProductsByBBD/'+categoryID).then(response => {
         this.fromDatabase = this.startTrimLower(response.data)
+      })
+    },
+
+    deleteShelf(){
+      const shelfID = this.shelfID
+      axios.delete(process.env.VUE_APP_BASE_URL+'/sms/deleteShelf/'+shelfID).then(response => {
+        this.$router.push({path:'/sms/shelfManage'})
+        console.log(response.status)
       })
     },
   }
