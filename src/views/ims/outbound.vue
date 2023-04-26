@@ -99,7 +99,7 @@ export default {
       this.receipts = response.data
     })
 
-    await console.log(this.receipts)
+
     await this.receipts.forEach(receipt =>{
       axios.get(process.env.VUE_APP_BASE_URL+'/ims/receiptItemsByReceiptId/'+receipt.id).then(response => {
         let receiptItems = []
@@ -116,7 +116,7 @@ export default {
         receipt.items = receiptItems;
       })
     })
-
+    await console.log(this.receipts)
   }
 }
 </script>

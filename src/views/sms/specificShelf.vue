@@ -256,6 +256,8 @@ export default {
     startTrimLower(temp){
       let newScene = {children:[{id: 'column1',children:[]}]}
       for (let i=0; i<temp.length; i++ ){
+        // console.log("空？")
+        // console.log(temp[i])
         newScene.children[0].children.push({
           id: `${i}`,
           abstractProductId:temp[i].id,
@@ -278,6 +280,7 @@ export default {
         fromExist.children.splice(columnIndex, 1, newColumn)
         this.checkCol(columnId)
         this.fromExist = fromExist
+        console.log("上面"+this.fromExist)
       }
     },
     onCardDropLower (columnId, dropResult) {
@@ -289,6 +292,7 @@ export default {
         newColumn.children = applyDrag(newColumn.children, dropResult)
         fromDatabase.children.splice(columnIndex, 1, newColumn)
         this.fromDatabase = fromDatabase
+        console.log("下面"+this.fromDatabase)
       }
     },
     getCardPayloadUpper (columnId) {

@@ -114,6 +114,8 @@
     </el-col>
   </el-row>
 
+  <el-button @click="returnThisItem(itemToReturn)">return this item</el-button>
+  <el-button @click="denyReturn(itemToReturn)">deny this return</el-button>
   <el-button @click="returnAllItems">return all items</el-button>
 
 </template>
@@ -164,6 +166,11 @@ export default {
     returnThisItem(itemToReturn){
       this.updateBatch(itemToReturn.batch_id,itemToReturn.amount);
       this.updateProduct(itemToReturn.product_id,itemToReturn.amount);
+      this.updateReceiptItem(itemToReturn.receipt_id,itemToReturn.product_id,itemToReturn.batch_id,itemToReturn.amount);
+      this.updateReceipt(itemToReturn.receipt_id)
+    },
+
+    denyReturn(itemToReturn){
       this.updateReceiptItem(itemToReturn.receipt_id,itemToReturn.product_id,itemToReturn.batch_id,itemToReturn.amount);
       this.updateReceipt(itemToReturn.receipt_id)
     },

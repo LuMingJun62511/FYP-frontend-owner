@@ -13,7 +13,7 @@
       <div v-if="steps === 0">
         <el-divider content-position="left">unhandled orders</el-divider>
         <el-card shadow="always">
-          <div style="width: 800px;">
+          <div style="width: 850px; margin: auto">
             <el-table
               :data="unhandledOrders"
               style="width: 100%">
@@ -69,7 +69,7 @@
 
         <el-divider content-position="left">handled orders</el-divider>
         <el-card shadow="always">
-          <div style="width: 800px;">
+          <div style="width: 850px; margin: auto">
             <el-table
               :data="handledOrders"
               style="width: 100%">
@@ -96,18 +96,14 @@
             </el-table>
           </div>
         </el-card>
-
-<!--        <el-card shadow="never">-->
-          <el-button style="margin-top: 12px;" @click="autoHandleOrders">auto handling</el-button>
-          <el-button style="margin-top: 12px;" @click="finishAutoHandling">finish auto handling</el-button>
-<!--        </el-card>-->
-
+        <el-button style="margin-top: 12px;" @click="autoHandleOrders">auto handling</el-button>
+        <el-button style="margin-top: 12px;" @click="finishAutoHandling">finish auto handling</el-button>
 
       </div>
 
       <div v-if="steps === 1">
         <el-card shadow="always">
-          <div style="width: 800px">
+          <div style="width: 850px;margin: auto">
             <el-table
               :data="unhandledOrders"
               style="width: 100%">
@@ -266,7 +262,7 @@
                 prop="id">
                 <template v-slot="scope">
                   <el-button @click="abolishReceipt(scope.row.id)">
-                    abolish this order and re-deal
+                    abolish this and re-deal
                   </el-button>
                 </template>
               </el-table-column>
@@ -548,34 +544,39 @@ export default {
       await axios.post(process.env.VUE_APP_BASE_URL+'/oms/receiptsSaving', res).then(response => {
         console.log(response.status)
       })
+      console.log("1完了")
     },
 
     updateReceiptItems(){
       let res = []
       this.receiptItems.forEach(receiptItem=>{
-        res.push({//问题是这样，auto increment使得receipt不可控，
-          id:{
-            receiptId:receiptItem.receipt_id,
-            productId:receiptItem.product_id,
-            batchId:0,
-          },
-          receipt:{
-            id:receiptItem.receipt_id
-          },
-          product:{
-            id:receiptItem.product_id
-          },
-          batch:{
-            id:0
-          },
-          totalPrice:receiptItem.total_price,
-          amount:receiptItem.amount,
-          status:receiptItem.status
-        })
+        if(receiptItem.amount !== 0){
+          res.push({//问题是这样，auto increment使得receipt不可控，
+            id:{
+              receiptId:receiptItem.receipt_id,
+              productId:receiptItem.product_id,
+              batchId:0,
+            },
+            receipt:{
+              id:receiptItem.receipt_id
+            },
+            product:{
+              id:receiptItem.product_id
+            },
+            batch:{
+              id:0
+            },
+            totalPrice:receiptItem.total_price,
+            amount:receiptItem.amount,
+            status:receiptItem.status
+          })
+        }
       })
+      console.log(res)
       axios.post(process.env.VUE_APP_BASE_URL+'/oms/receiptItemsSaving',res).then(response =>{
         console.log(response.status)
       })
+      console.log("2完了")
     },
 
     updateOrders(){
@@ -588,6 +589,7 @@ export default {
         console.log(response.status)
       })
       //主要是把没处理的这些标识为处理过的
+      console.log("3完了")
     },
 
     abolishReceipt(receiptID){
@@ -620,6 +622,7 @@ export default {
       await this.updateReceiptItems()//收据里的东西得推上去,同时还改了batch,和warehouse里的商品数
       await this.updateOrders()//然后把handledOrders里的order更新上去，主要是update为已处理
       await this.$router.push('/ims/outbound')
+    //   这里也有问题，得小看一手
     },
 
     handleChosen(index, chosen, max) {
