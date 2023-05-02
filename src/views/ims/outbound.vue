@@ -113,12 +113,8 @@ export default {
           })
         })
         receipt.items = receiptItems;
-        console.log("看看items")
-        console.log(receipt.items)
       })
     })
-    // await console.log("看看receipts")
-    // await console.log(this.receipts)
   }
 }
 </script>

@@ -555,9 +555,6 @@ export default {
       await axios.post(process.env.VUE_APP_BASE_URL+'/oms/receiptsSaving', res).then(response => {
         console.log(response.status)
       })
-      await console.log("看看推上去的receipts")
-      await console.log(res)
-      // console.log("1完了")
     },
 
     updateReceiptItems(){
@@ -585,8 +582,6 @@ export default {
           })
         }
       })
-      console.log("看看推上去的receipt items 可能空")
-      console.log(res)
       axios.post(process.env.VUE_APP_BASE_URL+'/oms/receiptItemsSaving',res).then(response =>{
         console.log(response.status)
       })
@@ -601,10 +596,6 @@ export default {
       axios.post(process.env.VUE_APP_BASE_URL+'/oms/updateOrderStatus',res).then(response =>{
         console.log(response.status)
       })
-      console.log("看看推上去的orders 可能空")
-      console.log(res)
-      //主要是把没处理的这些标识为处理过的
-      // console.log("3完了")
     },
 
     abolishReceipt(receiptID){

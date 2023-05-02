@@ -63,10 +63,9 @@
       </el-table>
     </div>
   </el-card>
-<!--  <el-card shadow="always"></el-card>-->
   <el-row>
     <el-col :span="8">
-      <el-card shadow="always">
+      <el-card shadow="always" style="height: 200px; margin: 10px">
         <p>to return items</p>
         <el-form :data="itemToReturn">
           <el-form-item label="which product">
@@ -82,7 +81,7 @@
       </el-card>
     </el-col>
     <el-col :span="8">
-      <el-card shadow="always">
+      <el-card shadow="always" style="height: 200px; margin: 10px">
         <p>product Info</p>
         <el-form :data="productInfo">
           <el-form-item label="product name">
@@ -99,7 +98,7 @@
 
     </el-col>
     <el-col :span="8">
-      <el-card shadow="always">
+      <el-card shadow="always" style="height: 200px; margin: 10px">
         <p>batch Info</p>
         <el-form :data="batchInfo">
           <el-form-item label="how many left">
@@ -137,13 +136,18 @@ export default {
   methods:{
     returnAllItems(){
       for (let i = this.receipts.length - 1; i >= 0; i--) {
-        this.receipts[i].items.forEach(item=>{
-          if(item.status === 2){
-            this.returnThisItem(item)
+        for(let j = this.receipts[i].items.length - 1; j >= 0; j--){
+          // console.log(i+" "+j)
+          // console.log(this.receipts[i].items[j])
+          // if(this.receipts[i].items[j].status === 2){
+          if (this.receipts &&
+            this.receipts[i] &&
+            this.receipts[i].items &&
+            this.receipts[i].items[j] &&
+            this.receipts[i].items[j].status === 2) {
+            this.returnThisItem(this.receipts[i].items[j])
           }
-        })
-        //反正我默认处理完了，就把receipt删去了吧
-        this.receipts.splice(i, 1)
+        }
       }
     },
 
@@ -155,49 +159,86 @@ export default {
       this.itemToReturn.amount=item.amount
       axios.get(process.env.VUE_APP_BASE_URL+'/ims/productInfo/'+item.product_id).then(response => {
         this.productInfo = response.data
-        console.log(this.productInfo)
       })
       axios.get(process.env.VUE_APP_BASE_URL+'/ims/batchInfo/'+item.batch_id).then(response => {
         this.batchInfo = response.data
-        console.log(this.batchInfo)
       })
     },
 
     returnThisItem(itemToReturn){
-      this.updateBatch(itemToReturn.batch_id,itemToReturn.amount);
-      this.updateProduct(itemToReturn.product_id,itemToReturn.amount);
-      this.updateReceiptItem(itemToReturn.receipt_id,itemToReturn.product_id,itemToReturn.batch_id,itemToReturn.amount);
-      this.updateReceipt(itemToReturn.receipt_id)
+      this.updateBatch(itemToReturn.batch_id,itemToReturn.amount);//简单的加回去
+      this.updateProduct(itemToReturn.product_id,itemToReturn.amount);//简单的加回去
+      this.updateReceiptItem(itemToReturn.receipt_id,itemToReturn.product_id,itemToReturn.batch_id,itemToReturn.amount);//简单的改数目
+      // 在前端，我因为没更新，所以我也得删除
+      let receipt = this.receipts.find(receipt => receipt.id === itemToReturn.receipt_id)//找到了这张单
+      let item = receipt.items.find(item => item.product_id === itemToReturn.product_id && item.batch_id === itemToReturn.batch_id)//找到了这个item
+      if(item.amount === itemToReturn.amount){
+        receipt.items.splice(receipt.items.indexOf(item), 1)
+      }
+      this.checkCorrespondingReceipt(itemToReturn);
     },
 
     denyReturn(itemToReturn){
-      this.updateReceiptItem(itemToReturn.receipt_id,itemToReturn.product_id,itemToReturn.batch_id,itemToReturn.amount);
-      this.updateReceipt(itemToReturn.receipt_id)
+      let receipt = this.receipts.find(receipt => receipt.id === itemToReturn.receipt_id)//找到了这张单
+      let item = receipt.items.find(item => item.product_id === itemToReturn.product_id && item.batch_id === itemToReturn.batch_id)//找到了这个item
+      item.status = 0
+      // 然后做一个deny的后端
+      let RIID = {
+        receiptId:this.itemToReturn.receipt_id,
+        productId:itemToReturn.product_id,
+        batchId:itemToReturn.batch_id
+      }
+      axios.post(process.env.VUE_APP_BASE_URL+'/ims/denyReturn',RIID).then(response => {
+        // console.log(response.data)
+      })
+      this.checkCorrespondingReceipt(itemToReturn);
+      // this.updateReceipt(itemToReturn.receipt_id)
+    },
+
+    checkCorrespondingReceipt(itemToReturn){
+      let receipt = this.receipts.find(receipt => receipt.id === itemToReturn.receipt_id)//找到了这张单
+      let isReceiptToReturn = false
+      receipt.items.forEach(item=>{//如果还有要还货，那就不能更新
+        if(item.status === 2){
+          isReceiptToReturn = true
+        }
+      })
+      if(!isReceiptToReturn){//如果没有要还货的了，那就更新
+        this.updateReceipt(itemToReturn.receipt_id)
+      }
     },
 
     updateBatch(batchId,amount){
       axios.post(process.env.VUE_APP_BASE_URL+'/ims/updateBatch/'+batchId+'/'+amount).then(response => {
-        console.log(response.status)
+        // console.log(response.status)
       })
     },
 
     updateProduct(productId,amount){
       axios.post(process.env.VUE_APP_BASE_URL+'/ims/updateProduct/'+productId+'/'+amount).then(response => {
-        console.log(response.status)
+        // console.log(response.status)
       })
     },
 
     updateReceiptItem(receiptId,productId,batchId,amount){
       axios.post(process.env.VUE_APP_BASE_URL+'/ims/updateReceiptItems/'+amount,{receiptId,productId,batchId}).then(response => {
-        console.log(response.status)
+        // console.log(response.status)
       })
     },
 
-    updateReceipt(receiptId){
+    updateReceipt(receiptId){//这个是更新整张单是否还有退货，不能随便用
       axios.post(process.env.VUE_APP_BASE_URL+'/ims/updateReceipt/'+ receiptId).then(response => {
-        console.log(response.status)
+        // console.log(response.status)
       })
+
+      //如果这单全处理了，那就得删去了
+      const receiptIndex = this.receipts.findIndex(receipt => receipt.id === receiptId)
+      if (receiptIndex !== -1) {
+        this.receipts.splice(receiptIndex, 1)
+      }
     },
+
+
   },
 
   async created () {
@@ -220,7 +261,6 @@ export default {
         receipt.items = receiptItems;
       })
     })
-
   }
 }
 </script>
