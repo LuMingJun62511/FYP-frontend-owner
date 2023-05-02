@@ -71,7 +71,7 @@ export default {
   data(){
     return{
       receipts:[], //因为生成了订单后，也得生成收据，所以就也得维护一个这个，这个在这里维护的时候是整体，推上去更新的时候分开推，比较好办
-      receiptItems:[],
+      // receiptItems:[],
     }
   },
   methods:{
@@ -99,7 +99,6 @@ export default {
       this.receipts = response.data
     })
 
-
     await this.receipts.forEach(receipt =>{
       axios.get(process.env.VUE_APP_BASE_URL+'/ims/receiptItemsByReceiptId/'+receipt.id).then(response => {
         let receiptItems = []
@@ -114,9 +113,12 @@ export default {
           })
         })
         receipt.items = receiptItems;
+        console.log("看看items")
+        console.log(receipt.items)
       })
     })
-    await console.log(this.receipts)
+    // await console.log("看看receipts")
+    // await console.log(this.receipts)
   }
 }
 </script>

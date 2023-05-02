@@ -96,9 +96,8 @@
             </el-table>
           </div>
         </el-card>
-        <el-button style="margin-top: 12px;" @click="autoHandleOrders">auto handling</el-button>
-        <el-button style="margin-top: 12px;" @click="finishAutoHandling">finish auto handling</el-button>
-
+        <el-button v-if="!autoHandlingFinished" style="margin-top: 12px;" @click="autoHandleOrders">auto handling</el-button>
+        <el-button v-if="autoHandlingFinished" style="margin-top: 12px;" @click="finishAutoHandling">finish auto handling</el-button>
       </div>
 
       <div v-if="steps === 1">
@@ -201,9 +200,9 @@
               </el-row>
             </div>
           </el-card>
-          <el-button style="margin-top: 12px;" @click="manualHandlingThisOrder">finish fixing this order</el-button>
+          <el-button v-if="this.unhandledOrders.length !== 0" style="margin-top: 12px;" @click="manualHandlingThisOrder">finish fixing this order</el-button>
         </div>
-        <el-button style="margin-top: 12px;" @click="finishManualHandling">finish manual handling</el-button>
+        <el-button v-if="this.unhandledOrders.length === 0" style="margin-top: 12px;" @click="finishManualHandling">finish manual handling</el-button>
       </div>
 
       <div v-if="steps === 2">
@@ -267,11 +266,18 @@
                 </template>
               </el-table-column>
             </el-table>
-            <p>You have processed all the orders, the next step is to outbound</p>
-            <p>If you want to outbound now, please click to jump to the outbound page</p>
-            <el-button @click="jumpToOutbound">
-              jump to outbound
-            </el-button>
+            <div v-if="!isConfirmDealing">
+              <p>Please confirm your dealing to the orders</p>
+              <el-button @click="confirmDealing">confirm</el-button>
+            </div>
+
+            <div v-if="isConfirmDealing">
+              <p>You have processed all the orders, the next step is to outbound</p>
+              <p>If you want to outbound now, please click to jump to the outbound page</p>
+              <el-button @click="jumpToOutbound">
+                jump to outbound
+              </el-button>
+            </div>
           </div>
         </el-card>
       </div>
@@ -297,6 +303,10 @@ export default {
       tempOrderItem:{},//这是后面解决冲突用的，我得知道在解决哪条缺货
       tempLackedItemInStock:{},//这是后面解决冲突用的，缺货的商品信息
       tempSimilarProducts:[],//这是后面解决冲突用的，是找到的同类商品
+
+      autoHandlingFinished:false,//自动处理完了，才能进一步往下走
+      // manualHandlingFinished:false,//(this.unhandledOrders.length === 0)
+      isConfirmDealing:false,//用户确认了处理，才能进一步往下走
     }
   },
 
@@ -323,6 +333,7 @@ export default {
       for (let i = this.unhandledOrders.length - 1; i >= 0; i--) {
         this.handleOrder(this.unhandledOrders[i]);
       }
+      this.autoHandlingFinished = true;
     },
     //注意，但手动生成receipt后，也要再过一遍，因为可能出现后面本来没问题的订单就有问题了，不过这个过一遍是简化版的计算，只需要重新计算货物要不要标红
     handleOrder(order){//点自动处理订单，要全过一遍，
@@ -519,7 +530,7 @@ export default {
       })
       this.receiptItems.forEach(receiptItem =>{
         this.receipts.forEach(receipt =>{
-          if (receiptItem.receipt_id === receipt.id){
+          if (receiptItem.receipt_id === receipt.id && receiptItem.amount !== 0){
             receipt.items.push(receiptItem)
           }
         })
@@ -544,7 +555,9 @@ export default {
       await axios.post(process.env.VUE_APP_BASE_URL+'/oms/receiptsSaving', res).then(response => {
         console.log(response.status)
       })
-      console.log("1完了")
+      await console.log("看看推上去的receipts")
+      await console.log(res)
+      // console.log("1完了")
     },
 
     updateReceiptItems(){
@@ -572,11 +585,11 @@ export default {
           })
         }
       })
+      console.log("看看推上去的receipt items 可能空")
       console.log(res)
       axios.post(process.env.VUE_APP_BASE_URL+'/oms/receiptItemsSaving',res).then(response =>{
         console.log(response.status)
       })
-      console.log("2完了")
     },
 
     updateOrders(){
@@ -588,8 +601,10 @@ export default {
       axios.post(process.env.VUE_APP_BASE_URL+'/oms/updateOrderStatus',res).then(response =>{
         console.log(response.status)
       })
+      console.log("看看推上去的orders 可能空")
+      console.log(res)
       //主要是把没处理的这些标识为处理过的
-      console.log("3完了")
+      // console.log("3完了")
     },
 
     abolishReceipt(receiptID){
@@ -617,12 +632,15 @@ export default {
       this.handledOrders.splice(orderIndexToBePutBack, 1)
     },
 
-    async jumpToOutbound () {
+    async confirmDealing(){
       await this.updateReceipt()//收据得推上去
       await this.updateReceiptItems()//收据里的东西得推上去,同时还改了batch,和warehouse里的商品数
       await this.updateOrders()//然后把handledOrders里的order更新上去，主要是update为已处理
-      await this.$router.push('/ims/outbound')
-    //   这里也有问题，得小看一手
+      this.isConfirmDealing = true;
+    },
+
+    jumpToOutbound () {
+      this.$router.push('/ims/outbound')
     },
 
     handleChosen(index, chosen, max) {
