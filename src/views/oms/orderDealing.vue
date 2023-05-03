@@ -200,7 +200,10 @@
               </el-row>
             </div>
           </el-card>
-          <el-button v-if="this.unhandledOrders.length !== 0" style="margin-top: 12px;" @click="manualHandlingThisOrder">finish fixing this order</el-button>
+          <div v-if="this.unhandledOrders.length !== 0">
+            <p>Confirm your choose of alternatives</p>
+            <el-button  style="margin-top: 12px;" @click="manualHandlingThisOrder">Confirm</el-button>
+          </div>
         </div>
         <el-button v-if="this.unhandledOrders.length === 0" style="margin-top: 12px;" @click="finishManualHandling">finish manual handling</el-button>
       </div>
@@ -621,6 +624,10 @@ export default {
       let orderToBePutBack = this.handledOrders[orderIndexToBePutBack]
       this.unhandledOrders.push(orderToBePutBack)
       this.handledOrders.splice(orderIndexToBePutBack, 1)
+      //4删除对应的所有receiptItem
+      this.receiptItems = this.receiptItems.filter(
+        (ri) => ri.receipt_id !== receiptID
+      );
     },
 
     async confirmDealing(){
