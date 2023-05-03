@@ -98,8 +98,12 @@ export default {
         axios.get(process.env.VUE_APP_BASE_URL+'/pms/productsByCategory/'+this.categoryID).then(response => {
           this.products = response.data
         })
+      }else if(this.categoryID === ''){//如果用户没写，那不能瞎找
+        axios.get(process.env.VUE_APP_BASE_URL+'/pms/productsByNameLike/'+this.nameStr).then(response => {
+          this.products = response.data
+        })
       }else {
-        axios.get(process.env.VUE_APP_BASE_URL+'/pms/productsByCategoryAndNameLike/'+this.categoryID+'/'+this.nameStr).then(response => {
+        axios.get(process.env.VUE_APP_BASE_URL+'/pms/productsByBoth/'+this.categoryID+'/'+this.nameStr).then(response => {
           this.products = response.data
         })
       }

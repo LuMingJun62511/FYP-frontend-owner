@@ -137,9 +137,6 @@ export default {
     returnAllItems(){
       for (let i = this.receipts.length - 1; i >= 0; i--) {
         for(let j = this.receipts[i].items.length - 1; j >= 0; j--){
-          // console.log(i+" "+j)
-          // console.log(this.receipts[i].items[j])
-          // if(this.receipts[i].items[j].status === 2){
           if (this.receipts &&
             this.receipts[i] &&
             this.receipts[i].items &&
@@ -192,7 +189,6 @@ export default {
         // console.log(response.data)
       })
       this.checkCorrespondingReceipt(itemToReturn);
-      // this.updateReceipt(itemToReturn.receipt_id)
     },
 
     checkCorrespondingReceipt(itemToReturn){
@@ -237,7 +233,6 @@ export default {
         this.receipts.splice(receiptIndex, 1)
       }
     },
-
 
   },
 
