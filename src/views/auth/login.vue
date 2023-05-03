@@ -2,23 +2,17 @@
   <div style="height: 10%;">
     <el-row
       class="header-row"
-      v-if="!checkLogin"
       align="middle"
     >
       <el-col :span="4" :offset="1">
         <img src="@/assets/icons/home.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
         <router-link to="/home" style="text-decoration: none; font-size: 24px">Home</router-link>
      </el-col>
-<!--      <el-col :span="4" :offset="11">-->
-<!--        <img src="@/assets/icons/login.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>-->
-<!--        <router-link to="/login" style="text-decoration: none; font-size: 24px">log in</router-link>-->
-<!--      </el-col>-->
       <el-col :span="4" :offset="15">
         <img src="@/assets/icons/signup.png" style="vertical-align: middle;max-width: 50px;max-height:50px "/>
         <router-link to="/signup" style="text-decoration: none; font-size: 24px">sign up</router-link>
       </el-col>
     </el-row>
-
   </div>
 
   <div style="height: 70%;">
