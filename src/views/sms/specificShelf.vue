@@ -216,7 +216,7 @@ export default {
             sale: temp[i*colNum+j].abstractProduct.sale,
             createdTime:temp[i*colNum+j].abstractProduct.createdTime,
             imgUrl:temp[i*colNum+j].abstractProduct.pic
-          })
+          })//所以，当我把下面的提到上面去了，往后台发的时候会缺东西，那我看看缺什么
         }
       }
       for (let i=(actualRow-1)*colNum; i<temp.length; i++ ) {
@@ -232,6 +232,7 @@ export default {
       }
       return newScene
     },
+
     startTrimUpper(temp,rowNum){
       let newScene = {children:[]}
       for (let i=0; i<rowNum; i++ ){
@@ -253,6 +254,7 @@ export default {
       }
       return newScene
     },
+
     startTrimLower(temp){
       let newScene = {children:[{id: 'column1',children:[]}]}
       for (let i=0; i<temp.length; i++ ){
@@ -270,6 +272,7 @@ export default {
       }
       return newScene
     },
+
     onCardDropUpper (columnId, dropResult) {
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
         const fromExist = Object.assign({}, this.fromExist)
@@ -283,6 +286,7 @@ export default {
         console.log("上面"+this.fromExist)
       }
     },
+
     onCardDropLower (columnId, dropResult) {
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
         const fromDatabase = Object.assign({}, this.fromDatabase)
@@ -295,16 +299,19 @@ export default {
         console.log("下面"+this.fromDatabase)
       }
     },
+
     getCardPayloadUpper (columnId) {
       return index => {
         return this.fromExist.children.filter(p => p.id === columnId)[0].children[index]
       }
     },
+
     getCardPayloadLower (columnId) {
       return index => {
         return this.fromDatabase.children.filter(p => p.id === columnId)[0].children[index]
       }
     },
+
     checkCol (columnId) {
       const colNum = this.colNum //拿到表格中每一行的最大数
       const fromExist = Object.assign({}, this.fromExist) //然后这个深复制，相当于新创对象吧
@@ -319,6 +326,7 @@ export default {
         this.fromDatabase = fromDatabase
       }
     },
+
     saveShelf(){
       let updatedData = []
       const fromExist = this.fromExist
@@ -348,6 +356,7 @@ export default {
         console.log(res.status)
       })
     },
+
     autoSortByCreated(){
       let Data = []
       let fromExist = this.fromExist
@@ -366,6 +375,7 @@ export default {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
       })
     },
+
     autoSortBySale(){
       let Data = []
       let fromExist = this.fromExist
@@ -383,6 +393,7 @@ export default {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
       })
     },
+
     autoSortByBBD(){
       let Data = []
       let fromExist = this.fromExist
@@ -401,6 +412,7 @@ export default {
         this.fromExist = this.trimUpper(response.data,rowNum,colNum)
       })
     },
+
     autoFindByCreated(){
       // 三个原为const categoryID = this.categoryID
       const categoryID = this.categoryId
@@ -408,12 +420,14 @@ export default {
         this.fromDatabase = this.startTrimLower(response.data)
       })
     },
+
     autoFindBySale(){
       const categoryID = this.categoryId
       axios.get(process.env.VUE_APP_BASE_URL+'/pms/findProductsBySale/'+categoryID).then(response => {
         this.fromDatabase = this.startTrimLower(response.data)
       })
     },
+
     autoFindByBBD(){
       const categoryID = this.categoryId
       axios.get(process.env.VUE_APP_BASE_URL+'/pms/findProductsByBBD/'+categoryID).then(response => {
