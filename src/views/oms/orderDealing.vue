@@ -246,17 +246,17 @@
               </el-table-column>
               <el-table-column
                 label="receiver_id"
-                prop="receiver_id"
+                prop="receiverId"
                 width="200">
               </el-table-column>
               <el-table-column
                 label="member_id"
-                prop="member_id"
+                prop="memberId"
                 width="200">
               </el-table-column>
               <el-table-column
                 label="total_amount"
-                prop="total_amount"
+                prop="totalAmount"
                 width="200">
               </el-table-column>
               <el-table-column
